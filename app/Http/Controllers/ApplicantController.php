@@ -13,6 +13,8 @@ class ApplicantController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            
+            //APPLICANT VALIDATION
             'applicant_id' => 'required|integer',
             'applicant_name' => 'required|string|min:2|max:100',
             'designation' => 'required|string|min:2|max:100',
@@ -20,7 +22,12 @@ class ApplicantController extends Controller
             'map_id' => 'required|string|min:2|max:100',
             'latitude' => 'required|string|min:2|max:100',
             'longitude' => 'required|string|min:2|max:100',
-            'marker_description' => 'required|string|min:2|max:100',
+            'marker_description' => 'required|string|min:2|max:100',            
+
+            //APPLICANT COMPANY VALIDATION
+
+
+            //APPLICANT ACCOUNT VALIDATION
         ]);
 
         if ($validator->fails()) {

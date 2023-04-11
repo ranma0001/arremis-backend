@@ -18,8 +18,8 @@ class CreateApplicantsTable extends Migration
             $table->bigInteger('applicant_id')->unique();
             $table->string('applicant_name');
             $table->string('designation');
-            $table->bigInteger('company_info_id')->unique();
-            $table->bigInteger('account_info_id')->unique();
+            $table->foreignId('company_info_id')->nullable();
+            $table->foreignId('applicant_account_id')->nullable();
             $table->bigInteger('map_id');
             $table->string('latitude');
             $table->string('longitude');
