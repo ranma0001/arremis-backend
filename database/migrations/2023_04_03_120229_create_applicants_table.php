@@ -13,17 +13,14 @@ class CreateApplicantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_applicants', function (Blueprint $table) {
+        Schema::create('applicants', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('applicant_id')->unique();
-            $table->string('applicant_name');
+            $table->string('applicant_firstname');
+            $table->string('applicant_middlename');
+            $table->string('applicant_lastname');
+            $table->string('applicant_extensionname');
             $table->string('designation');
-            $table->foreignId('company_info_id')->nullable();
-            $table->foreignId('applicant_account_id')->nullable();
-            $table->bigInteger('map_id');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('marker_description');
+            
             $table->timestamps();
         });
     }

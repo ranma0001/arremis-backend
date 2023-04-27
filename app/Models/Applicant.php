@@ -11,15 +11,14 @@ class Applicant extends Model
 {
     use HasFactory;
 
+    public $table = 'applicants';
+
     protected $fillable = [
-        'applicant_name',
+        'applicant_firstname',
+        'applicant_middlename',
+        'applicant_lastname',
+        'applicant_extensionname',
         'designation',
-        'company_info_id',
-        'account_info_id',
-        'map_id',
-        'latitude',
-        'longitude',
-        'marker_description',
     ];
 
     public function accountinfo()

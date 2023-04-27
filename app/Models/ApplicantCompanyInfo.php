@@ -9,15 +9,28 @@ class ApplicantCompanyInfo extends Model
 {
     use HasFactory;
 
+    public $table = 'applicant_company_information';
+
     protected $fillable = [
-        'applicant_info_id',
+        'applicant_id',
         'company_name',
         'year_establish',
-        'location_id',
         'tel_no',
         'fax_no',
         'email',
-        'business_organization',
+        'business_organization_type',
+        'owner_name',
+        'region',
+        'province',
+        'municipality',
+        'barangay',
+        'address_street',
+        'map_id',
+        'latitude',
+        'longitude',
+        'marker_description',
+        'application_type',
+        'application_date',
     ];
 
     public function applicant()

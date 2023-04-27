@@ -9,12 +9,13 @@ class ApplicantAccountInfo extends Model
 {
     use HasFactory;
 
+    public $table = 'applicant_account_information';
+
     protected $fillable = [
-        'applicant_account_id',
+        'applicant_id',
         'username',
         'password',
         'status',
-        'owner_name ',
         'profile_picture',
     ];
 

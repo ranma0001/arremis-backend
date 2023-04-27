@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\JWTController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,5 +32,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/profile', [JWTController::class, 'profile']);
 
     //Applicant
-    Route::post('/applicant/new', [ApplicantController::class, 'store']);
+    Route::post('/add_applicant', [ApplicationController::class, 'store']);
+    Route::delete('applicants/{id}/delete', [ApplicationController::class, 'destroy']);
 });
