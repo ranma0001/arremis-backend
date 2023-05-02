@@ -19,6 +19,7 @@ class Applicant extends Model
         'applicant_lastname',
         'applicant_extensionname',
         'designation',
+        'is_deleted',
     ];
 
     public function accountinfo()

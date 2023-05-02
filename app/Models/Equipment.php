@@ -5,22 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Facility extends Model
+class Equipment extends Model
 {
     use HasFactory;
 
-    public $table = 'facilities';
+    public $table = 'equipment';
 
     protected $fillable = [
         'applicant_id',
-        'facility_name',
-        'facility_quantity',
-        'status',
-        'image_string',
+        'equipment_name',
+        'equipment_quantity',
         'review_comment',
         'reviewed_by',
         'is_verified',
         'review_level',
-        'is_deleted',
-    ];
+        'is_deleted'];
 }

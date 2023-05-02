@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\JWTController;
+use App\Http\Controllers\NetworkDealersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +35,24 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/profile', [JWTController::class, 'profile']);
 
     //Applicant
-    Route::post('/add_applicant', [ApplicationController::class, 'store']);
-    Route::delete('applicants/{id}/delete', [ApplicationController::class, 'destroy']);
+    Route::post('/add_applicant', [ApplicationController::class, 'create_applicant']);
+    // Route::delete('applicants/{id}/delete', [ApplicationController::class, 'destroy']);
+    Route::put('applicants/delete/{id}', [ApplicationController::class, 'edit_is_delete']); //soft delete
+    Route::put('applicants/update/{id}', [ApplicationController::class, 'update_applicant']);
+    Route::get('applicants/show/{id}', [ApplicationController::class, 'show']);
+
+    //Facility
+    Route::post('applicants/add_facility', [FacilityController::class, 'create_facility']);
+    Route::put('applicants/delete_facility/{id}', [FacilityController::class, 'edit_is_delete']);
+    Route::get('applicants/show_applicant/{id}', [FacilityController::class, 'show']);
+    Route::get('applicants/all_facility', [FacilityController::class, 'view_facility']);
+
+    //Equipment
+    Route::post('applicants/add_equipment', [EquipmentController::class, 'create_equipment']);
+    Route::put('applicants/delete_equipment/{id}', [EquipmentController::class, 'edit_is_delete']);
+    Route::get('applicants/all_equipment', [EquipmentController::class, 'view_facility']);
+
+    //Network Dealer
+    Route::post('applicants/add_network_dealer', [NetworkDealersController::class, 'create_network_dealers']);
+
 });

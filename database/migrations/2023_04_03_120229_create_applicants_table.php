@@ -20,7 +20,7 @@ class CreateApplicantsTable extends Migration
             $table->string('applicant_lastname');
             $table->string('applicant_extensionname');
             $table->string('designation');
-            
+            $table->string('is_deleted')->default('0');
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFacilitiesTable extends Migration
+class CreateNetworkDealersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateFacilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('facilities', function (Blueprint $table) {
+        Schema::create('network_dealers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
-            $table->string('facility_name');
-            $table->integer('facility_quantity');
-            $table->integer('status');
-            $table->string('image_string');
+            $table->string('company_name');
+            $table->string('contact');
+            $table->string('address');
             $table->string('review_comment');
             $table->string('reviewed_by');
             $table->integer('is_verified');
@@ -36,6 +35,6 @@ class CreateFacilitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facilities');
+        Schema::dropIfExists('network_dealers');
     }
 }
