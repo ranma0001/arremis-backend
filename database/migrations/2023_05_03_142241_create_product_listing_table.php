@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ApplicantAccountInformation extends Migration
+class CreateProductListingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,8 @@ class ApplicantAccountInformation extends Migration
      */
     public function up()
     {
-        Schema::create('applicant_account_informations', function (Blueprint $table) {
+        Schema::create('product_listing', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
-            $table->string('username');
-            $table->string('password');
-            $table->integer('status');
-            $table->string('profile_picture');
             $table->timestamps();
         });
     }
@@ -31,6 +26,6 @@ class ApplicantAccountInformation extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applicant_account_informations');
+        Schema::dropIfExists('product_listing');
     }
 }

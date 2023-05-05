@@ -4,30 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\NetworkDealers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class NetworkDealersController extends Controller
 {
     public function create_network_dealers(Request $request)
     {
 
-        // $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
 
-        //     //APPLICANT VALIDATION
-        //     'applicant_id' => 'required|integer',
-        //     'facility_name' => 'required|string|min:2|max:100',
-        //     'facility_quantity' => 'required|integer',
-        //     'status' => 'required|integer',
-        //     'image_string' => 'nullable|string',
-        //     'review_comment' => 'nullable|string',
-        //     'reviewed_by' => 'nullable|string',
-        //     'is_verified' => 'nullable|integer',
-        // ]);
+            //APPLICANT VALIDATION
+            'applicant_id' => 'required|integer',
+            'company_name' => 'required|string|min:2|max:100',
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 400);
-        // }
+        ]);
 
-        return 1;
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         try {
 
             \DB::beginTransaction();
@@ -52,6 +46,27 @@ class NetworkDealersController extends Controller
         } catch (\Exception $e) {
             \DB::rollBack();
 
+            return response()->json([$e]);
+        }
+    }
+
+    public function edit_is_delete(Request $request, int $id)
+    {
+        try {
+            \DB::beginTransaction();
+            $facility = NetworkDealers::find($id);
+
+            $facility->update([
+                'is_deleted' => $is_deleted,
+            ]);
+
+            \DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => "Network Dealer Deleted Successfully",
+            ], 200);
+        } catch (\Exception $e) {
+            \DB::rollBack();
             return response()->json([$e]);
         }
     }
