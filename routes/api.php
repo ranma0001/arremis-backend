@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\NetworkDealersController;
+use App\Http\Controllers\ServiceCenterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,11 +29,11 @@ Route::group(['middleware' => 'api'], function ($router) {
     //pagination
 
     //Login
-    Route::post('/register', [JWTController::class, 'register']);
-    Route::post('/login', [JWTController::class, 'login']);
-    Route::post('/logout', [JWTController::class, 'logout']);
-    Route::post('/refresh', [JWTController::class, 'refresh']);
-    Route::post('/profile', [JWTController::class, 'profile']);
+    Route::post('/auth/register', [JWTController::class, 'register']);
+    Route::post('/auth/login', [JWTController::class, 'login']);
+    Route::post('/auth/logout', [JWTController::class, 'logout']);
+    Route::post('/auth/refresh', [JWTController::class, 'refresh']);
+    Route::post('/auth/user_info', [JWTController::class, 'profile']);
 
     //Applicant
     Route::post('/add_applicant', [ApplicationController::class, 'create_applicant']);
@@ -54,5 +55,10 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     //Network Dealer
     Route::post('applicants/add_network_dealer', [NetworkDealersController::class, 'create_network_dealers']);
+    Route::put('applicants/delete_network_dealer/{id}', [NetworkDealersController::class, 'edit_is_delete']);
+
+    //Service Center
+    Route::post('applicants/add_service_center', [ServiceCenterController::class, 'create_service_center']);
+    Route::put('applicants/delete_service_center/{id}', [ServiceCenterController::class, 'edit_is_delete']);
 
 });

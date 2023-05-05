@@ -13,7 +13,7 @@ class ApplicantCompanyInformation extends Migration
      */
     public function up()
     {
-        Schema::create('applicant_company_information', function (Blueprint $table) {
+        Schema::create('applicant_company_informations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
             $table->string('company_name');
@@ -45,6 +45,6 @@ class ApplicantCompanyInformation extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applicant_company_information');
+        Schema::dropIfExists('applicant_company_informations');
     }
 }

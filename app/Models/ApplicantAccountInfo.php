@@ -9,7 +9,7 @@ class ApplicantAccountInfo extends Model
 {
     use HasFactory;
 
-    public $table = 'applicant_account_information';
+    public $table = 'applicant_account_informations';
 
     protected $fillable = [
         'applicant_id',
