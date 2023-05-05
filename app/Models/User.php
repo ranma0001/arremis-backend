@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Applicant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,6 +11,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
+
+    public $table = 'users';
 
     public function getJWTIdentifier()
     {
@@ -22,9 +25,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     protected $fillable = [
-        'name',
+        'firstname',
+        'middlename',
+        'lastname',
+        'extensionname',
         'email',
         'password',
+        'user_type',
+        'status',
     ];
 
     protected $hidden = [
@@ -35,4 +43,10 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function applicant()
+    {
+        return $this->hasOne(Applicant::class);
+    }
+
 }

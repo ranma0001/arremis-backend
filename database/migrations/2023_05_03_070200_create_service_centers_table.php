@@ -13,7 +13,7 @@ class CreateServiceCentersTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_centers', function (Blueprint $table) {
+        Schema::create('service_center', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
             $table->string('center_name');
@@ -38,6 +38,6 @@ class CreateServiceCentersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_centers');
+        Schema::dropIfExists('service_center');
     }
 }

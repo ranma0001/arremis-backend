@@ -19,10 +19,14 @@ class JWTController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:2|max:100',
+            'firstname' => 'required|string|min:2|max:100',
+            'middlename' => 'string',
+            'lastname' => 'required|string|min:2|max:100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
             'password_confirmation' => 'min:6|required_with:password|same:password',
+            'user_type' => 'required|integer',
+            'status' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -30,9 +34,14 @@ class JWTController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
+            'firstname' => $request->firstname,
+            'middlename' => $request->middlename,
+            'lastname' => $request->lastname,
+            'extensionname' => $request->extensionname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'user_type' => $request->user_type,
+            'status' => $request->status,
         ]);
 
         return response()->json([
@@ -56,7 +65,7 @@ class JWTController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, 1);
     }
 
     public function logout()
@@ -67,7 +76,7 @@ class JWTController extends Controller
 
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth()->refresh(), 0);
     }
 
     public function profile()
@@ -75,12 +84,22 @@ class JWTController extends Controller
         return response()->json(auth()->user());
     }
 
-    protected function respondWithToken($token)
+    // 1 with user return else 0
+    protected function respondWithToken($token, $ret_type)
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-        ]);
+        if ($ret_type == 1) {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'user_info' => auth()->user(),
+                'expires_in' => auth()->factory()->getTTL() * 60,
+            ]);
+        } else {
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+            ]);
+        }
     }
 }

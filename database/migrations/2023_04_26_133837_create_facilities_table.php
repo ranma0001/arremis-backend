@@ -13,7 +13,7 @@ class CreateFacilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('facilities', function (Blueprint $table) {
+        Schema::create('facility', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
             $table->string('facility_name');
@@ -36,6 +36,6 @@ class CreateFacilitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facilities');
+        Schema::dropIfExists('facility');
     }
 }
