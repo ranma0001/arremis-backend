@@ -34,7 +34,7 @@ class ApplicationController extends Controller
             'tel_no' => 'string|nullable',
             'fax_no' => 'string|nullable',
             'email' => 'string|nullable',
-            'business_organization_type' => 'string|nullable',
+            'business_organization_type' => 'integer|nullable',
 
             'region' => 'string|nullable',
             'province' => 'string|nullable',
@@ -42,21 +42,20 @@ class ApplicationController extends Controller
             'barangay' => 'string|nullable',
             'address_street' => 'string|nullable',
             'owner_name' => 'string|nullable',
-            'map_id' => 'string|nullable',
-            'latitude' => 'string|nullable',
-            'longitude' => 'string|nullable',
-            'marker_description' => 'string|nullable',
+            // 'map_id' => 'string|nullable',
+            // 'latitude' => 'string|nullable',
+            // 'longitude' => 'string|nullable',
+            // 'marker_description' => 'string|nullable',
             'address_street' => 'string|nullable',
-            'application_type' => 'string|nullable',
+            'application_type' => 'integer|nullable',
             'application_date' => 'date|nullable',
         ]);
 
         $validator_account = Validator::make($request->input('account_info'), [
             'username' => 'required|string',
             'password' => 'required|string',
-            'status' => 'required|integer',
-            'owner_name' => 'string',
-            'profile_picture' => 'nullable|string',
+            // 'owner_name' => 'string',
+            // 'profile_picture' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -83,17 +82,19 @@ class ApplicationController extends Controller
                     'designation' => $request->input('applicant_info')['designation'],
                 ]);
             }
-
+   
             if ($request->has('account_info')) {
                 $applicant_account = ApplicantAccountInfo::create([
                     'applicant_id' => $applicant->id,
                     'username' => $request->input('account_info')['username'],
                     'password' => Hash::make($request->input('account_info')['password'], ),
-                    'status' => $request->input('account_info')['status'],
-                    'profile_picture' => $request->input('account_info')['profile_picture'],
+                    'status' => 1,
+                    'profile_picture' => "doghot",
+                    // 'status' => $request->input('account_info')['status'],
+                    // 'profile_picture' => $request->input('account_info')['profile_picture'],
                 ]);
             }
-
+   
             if ($request->has('company_info')) {
                 $applicant_company = ApplicantCompanyInfo::create([
                     'applicant_id' => $applicant->id,
@@ -109,14 +110,21 @@ class ApplicationController extends Controller
                     'municipality' => $request->input('company_info')['municipality'],
                     'barangay' => $request->input('company_info')['barangay'],
                     'address_street' => $request->input('company_info')['address_street'],
-                    'map_id' => $request->input('company_info')['map_id'],
-                    'latitude' => $request->input('company_info')['latitude'],
-                    'longitude' => $request->input('company_info')['longitude'],
-                    'marker_description' => $request->input('company_info')['marker_description'],
+
+                    'map_id' => 0.11111,
+                    'latitude' => 121.123123,
+                    'longitude' => 12.090909,
+                    'marker_description' => "hotdog",
+
+                    // 'map_id' => $request->input('company_info')['map_id'],
+                    // 'latitude' => $request->input('company_info')['latitude'],
+                    // 'longitude' => $request->input('company_info')['longitude'],
+                    // 'marker_description' => $request->input('company_info')['marker_description'],
                     'application_type' => $request->input('company_info')['application_type'],
                     'application_date' => $request->input('company_info')['application_date'],
                 ]);
             }
+     
             \DB::commit();
             return response()->json([
                 'message' => 'Applicant created successfully.',
@@ -264,8 +272,8 @@ class ApplicationController extends Controller
     public function destroy($id)
     {
         $applicant = Applicant::find($id);
-        // $applicant_account = ApplicantAccountInfo::where('applicant_id', '=', $id);
-        // $applicant_company = ApplicantCompanyInfo::where('applicant_id', '=', $id);
+        $applicant_account = ApplicantAccountInfo::where('applicant_id', '=', $id);
+        $applicant_company = ApplicantCompanyInfo::where('applicant_id', '=', $id);
 
         if ($applicant && $applicant_account && $applicant_company) {
             \DB::beginTransaction();
