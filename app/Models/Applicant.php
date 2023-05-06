@@ -24,13 +24,13 @@ class Applicant extends Model
         'user_id',
     ];
 
-    public function companyinfo()
-    {
-        return $this->hasOne(ApplicantCompanyInfo::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function applicantCompanyInfo()
+    {
+        return $this->belongsTo(ApplicantCompanyInfo::class);
     }
 }

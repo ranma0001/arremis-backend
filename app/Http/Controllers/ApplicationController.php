@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
-use App\Models\ApplicantAccountInfo;
 use App\Models\ApplicantCompanyInfo;
 use App\Models\User;
 use DB;
@@ -209,10 +208,11 @@ class ApplicationController extends Controller
                 ]);
             } else {
 
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Applicant found',
-                ], 404);
+                return $this->asjson([
+                    "code" => 400,
+                    "result" => 'error',
+                    "message" => "Applicant not found",
+                ]);
             }
 
             if ($request->has('user_info')) {
@@ -228,11 +228,11 @@ class ApplicationController extends Controller
                 ]);
 
             } else {
-
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Applicant2 found',
-                ], 404);
+                return $this->asjson([
+                    "code" => 400,
+                    "result" => 'error',
+                    "message" => "Applicant not found",
+                ]);
             }
 
             if ($request->has('company_info')) {
@@ -258,14 +258,16 @@ class ApplicationController extends Controller
                 ]);
             } else {
 
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Applicant2 found',
-                ], 404);
+                return $this->asjson([
+                    "code" => 400,
+                    "result" => 'error',
+                    "message" => "Applicant not found",
+                ]);
             }
 
             \DB::commit();
-            return $this->asJson([
+
+            return response()->json([
                 "User Information" => $user,
                 "Applicant Information" => $applicant,
                 "Company Information" => $applicant_company,
@@ -279,6 +281,9 @@ class ApplicationController extends Controller
 
     public function edit_is_delete(Request $request, int $id)
     {
+
+        $status = $request->input('status');
+
         try {
             \DB::beginTransaction();
             $applicant = Applicant::find($id);
@@ -290,15 +295,17 @@ class ApplicationController extends Controller
                 \DB::commit();
                 return response()->json([
                     'status' => 200,
-                    'message' => "Applicant Deleted Successfully",
+                    'applicant' => $applicant,
+                    'message' => "Applicant " . $status . " Successfully",
                 ], 200);
             } else {
-
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Applicant found',
-                ], 404);
+                return $this->asjson([
+                    "code" => 400,
+                    "result" => 'error',
+                    "message" => "No Records Found",
+                ]);
             }
+
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e]);
@@ -331,11 +338,11 @@ class ApplicationController extends Controller
 
         } else {
 
-            return response()->json([
-                'status' => 404,
-                'message' => 'No Records Found',
-            ], 404);
-
+            return $this->asjson([
+                "code" => 400,
+                "result" => 'error',
+                "message" => "No Records Found",
+            ]);
         }
     }
 
@@ -356,13 +363,17 @@ class ApplicationController extends Controller
             })
             ->first();
 
-        $applicant_account = ApplicantAccountInfo::query()
-            ->select('applicant_id', 'username', 'status',
-                'profile_picture')
+        $applicant_account = User::query()
+            ->select('firstname', 'middlename', 'lastname', 'email', 'status', 'user_type')
             ->where('id', $id)
             ->first();
 
-        if ($applicant_account != null or $applicant != null) {
+        $applicant_company = ApplicantCompanyInfo::query()
+            ->select('company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type')
+            ->where('applicant_id', $id)
+            ->first();
+
+        if ($applicant_account != null and $applicant != null) {
             return response()->json([
                 'applicant' => $applicant,
                 'applicant_account' => $applicant_account,
@@ -376,6 +387,23 @@ class ApplicationController extends Controller
             ], 404);
 
         }
+
+    }
+
+    public function list_applicant(Request $request)
+    {
+        $query = Applicant::select('*')
+            ->with('user.applicantCompanyInfo');
+
+//filtering
+        $ALLOWED_FILTERS = [];
+        $SEARCH_FIELDS = [];
+        $JSON_FIELDS = [];
+        $BOOL_FIELDS = [];
+        $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
+        return response()->json([
+            'applicant' => $response,
+        ]);
 
     }
 }

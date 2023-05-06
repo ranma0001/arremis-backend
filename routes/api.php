@@ -41,6 +41,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::put('applicants/delete/{id}', [ApplicationController::class, 'edit_is_delete']); //soft delete
     Route::put('applicants/update/{id}', [ApplicationController::class, 'update_applicant']);
     Route::get('applicants/show/{id}', [ApplicationController::class, 'show']);
+    Route::get('applicants/all_applicant', [ApplicationController::class, 'list_applicant']);
 
     //Facility
     Route::post('applicants/add_facility', [FacilityController::class, 'create_facility']);

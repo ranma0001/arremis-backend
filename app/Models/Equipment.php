@@ -9,7 +9,7 @@ class Equipment extends Model
 {
     use HasFactory;
 
-    public $table = 'equipments';
+    public $table = 'equipment';
 
     protected $fillable = [
         'applicant_id',

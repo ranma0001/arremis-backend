@@ -92,7 +92,7 @@ class FacilityController extends Controller
 
         $facility = Facility::query()
             ->select('applicant_id', 'applicant_id', 'facility_name', 'facility_quantity',
-                DB::raw('myFunction(status) as status'), 'image_string', 'review_comment',
+                DB::raw('fn_facility_status(status) as status'), 'image_string', 'review_comment',
                 'reviewed_by', 'is_verified', 'review_level', 'is_deleted')
             ->where('id', $id)
             ->where(function ($query) use ($facilityName) {
