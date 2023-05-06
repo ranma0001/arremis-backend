@@ -17,11 +17,11 @@ class CreateApplicantsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('applicant_firstname');
-            $table->string('applicant_middlename');
+            $table->string('applicant_middlename')->nullable();
             $table->string('applicant_lastname');
-            $table->string('applicant_extensionname');
-            $table->string('designation');
-            $table->string('profile_picture');
+            $table->string('applicant_extensionname')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->string('is_deleted')->default('0');
             $table->timestamps();
         });

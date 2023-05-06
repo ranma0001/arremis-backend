@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\ApplicantAccountInfo;
+use App\Models\ApplicantCompanyInfo;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
@@ -87,6 +88,7 @@ class ApplicationController extends Controller
 
             if ($request->has('applicant_info')) {
                 $applicant = Applicant::create([
+                    'user_id' => $user->id,
                     'applicant_firstname' => $request->input('applicant_info')['applicant_firstname'],
                     'applicant_middlename' => $request->input('applicant_info')['applicant_middlename'],
                     'applicant_lastname' => $request->input('applicant_info')['applicant_lastname'],
@@ -95,36 +97,36 @@ class ApplicationController extends Controller
                 ]);
             }
 
-            // if ($request->has('company_info')) {
-            //     $applicant_company = ApplicantCompanyInfo::create([
-            //         'applicant_id' => $applicant->id,
-            //         'company_name' => $request->input('company_info')['company_name'],
-            //         'year_establish' => $request->input('company_info')['year_establish'],
-            //         'tel_no' => $request->input('company_info')['tel_no'],
-            //         'fax_no' => $request->input('company_info')['fax_no'],
-            //         'email' => $request->input('company_info')['email'],
-            //         'business_organization_type' => $request->input('company_info')['business_organization_type'],
-            //         'owner_name' => $request->input('company_info')['owner_name'],
-            //         'region' => $request->input('company_info')['region'],
-            //         'province' => $request->input('company_info')['province'],
-            //         'municipality' => $request->input('company_info')['municipality'],
-            //         'barangay' => $request->input('company_info')['barangay'],
-            //         'address_street' => $request->input('company_info')['address_street'],
-            //         'map_id' => $request->input('company_info')['map_id'],
-            //         'latitude' => $request->input('company_info')['latitude'],
-            //         'longitude' => $request->input('company_info')['longitude'],
-            //         'marker_description' => $request->input('company_info')['marker_description'],
-            //         'application_type' => $request->input('company_info')['application_type'],
-            //         'application_date' => $request->input('company_info')['application_date'],
-            //     ]);
-            // }
+            if ($request->has('company_info')) {
+                $applicant_company = ApplicantCompanyInfo::create([
+                    'applicant_id' => $applicant->id,
+                    'company_name' => $request->input('company_info')['company_name'],
+                    'year_establish' => $request->input('company_info')['year_establish'],
+                    'tel_no' => $request->input('company_info')['tel_no'],
+                    'fax_no' => $request->input('company_info')['fax_no'],
+                    'company_email' => $request->input('company_info')['company_email'],
+                    'business_organization_type' => $request->input('company_info')['business_organization_type'],
+                    'owner_name' => $request->input('company_info')['owner_name'],
+                    'region' => $request->input('company_info')['region'],
+                    'province' => $request->input('company_info')['province'],
+                    'municipality' => $request->input('company_info')['municipality'],
+                    'barangay' => $request->input('company_info')['barangay'],
+                    'address_street' => $request->input('company_info')['address_street'],
+                    'map_id' => $request->input('company_info')['map_id'],
+                    'latitude' => $request->input('company_info')['latitude'],
+                    'longitude' => $request->input('company_info')['longitude'],
+                    'marker_description' => $request->input('company_info')['marker_description'],
+                    'application_type' => $request->input('company_info')['application_type'],
+                    'application_date' => $request->input('company_info')['application_date'],
+                ]);
+            }
 
             DB::commit();
             return response()->json([
                 'message' => 'Applicant created successfully.',
-                // 'applicant' => $applicant,
+                'applicant' => $applicant,
                 'user' => $user,
-                //'account' => $applicant_company,
+                'company info' => $applicant_company,
             ], 201);
 
         } catch (\Exception $e) {
@@ -145,49 +147,45 @@ class ApplicationController extends Controller
             'applicant_lastname' => 'nullable|string|min:1|max:100',
             'applicant_extensionname' => 'nullable|string',
             'designation' => 'nullable|string',
-
+            'profile_picture' => 'nullable|string',
         ]);
 
-        // $validator_company = Validator::make($request->input('company_info'), [
-        //     //APPLICANT COMPANY VALIDATION
-        //     'company_name' => 'string|min:2|max:100|nullable',
-        //     'year_establish' => 'nullable|numeric|between:1700,2022|nullable',
+        $validator_company = Validator::make($request->input('company_info'), [
+            //APPLICANT COMPANY VALIDATION
+            'company_name' => 'string|min:2|max:100|nullable',
+            'year_establish' => 'nullable|numeric|between:1700,2022|nullable',
+            'tel_no' => 'string|nullable',
+            'fax_no' => 'string|nullable',
+            'company_email' => 'string|nullable',
+            'business_organization_type' => 'numeric|nullable',
+            'region' => 'string|nullable',
+            'province' => 'string|nullable',
+            'municipality' => 'string|nullable',
+            'barangay' => 'string|nullable',
+            'address_street' => 'string|nullable',
+            'owner_name' => 'string|nullable',
+            'map_id' => 'string|nullable',
+            'latitude' => 'string|nullable',
+            'longitude' => 'string|nullable',
+            'marker_description' => 'string|nullable',
+            'application_type' => 'integer|nullable',
+            'application_date' => 'date|nullable',
+        ]);
 
-        //     'tel_no' => 'string|nullable',
-        //     'fax_no' => 'string|nullable',
-        //     'email' => 'string|nullable',
-        //     'business_organization_type' => 'string|nullable',
-
-        //     'region' => 'string|nullable',
-        //     'province' => 'string|nullable',
-        //     'municipality' => 'string|nullable',
-        //     'barangay' => 'string|nullable',
-        //     'address_street' => 'string|nullable',
-        //     'owner_name' => 'string|nullable',
-        //     'map_id' => 'string|nullable',
-        //     'latitude' => 'string|nullable',
-        //     'longitude' => 'string|nullable',
-        //     'marker_description' => 'string|nullable',
-        //     'address_street' => 'string|nullable',
-        //     'application_type' => 'string|nullable',
-        //     'application_date' => 'date|nullable',
-        // ]);
-
-        $validator_account = Validator::make($request->input('account_info'), [
-            'username' => 'required|string',
-            'password' => 'required|string',
+        $validator_account = Validator::make($request->input('user_info'), [
+            'password' => 'required|string|min:6',
+            'password_confirmation' => 'min:6|required_with:password|same:password',
+            'user_type' => 'required|integer',
             'status' => 'required|integer',
-            'owner_name' => 'string',
-            'profile_picture' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        // if ($validator_company->fails()) {
-        //     return response()->json($validator_company->errors(), 400);
+        if ($validator_company->fails()) {
+            return response()->json($validator_company->errors(), 400);
 
-        // }
+        }
         if ($validator_account->fails()) {
             return response()->json($validator_account->errors(), 400);
         }
@@ -195,7 +193,10 @@ class ApplicationController extends Controller
         try {
             \DB::beginTransaction();
             $applicant = Applicant::find($id);
-            $applicant_account = ApplicantAccountInfo::find($id);
+            $user = User::find($applicant['user_id']);
+            $applicant_company = ApplicantCompanyInfo::find($id);
+
+            // return response()->json($applicant['user_id']);
 
             if ($request->has('applicant_info')) {
                 $applicant->update([
@@ -204,6 +205,7 @@ class ApplicationController extends Controller
                     'applicant_lastname' => $request->input('applicant_info')['applicant_lastname'],
                     'applicant_extensionname' => $request->input('applicant_info')['applicant_extensionname'],
                     'designation' => $request->input('applicant_info')['designation'],
+                    'profile_picture' => $request->input('applicant_info')['profile_picture'],
                 ]);
             } else {
 
@@ -213,12 +215,46 @@ class ApplicationController extends Controller
                 ], 404);
             }
 
-            if ($request->has('account_info')) {
-                $applicant_account->update([
-                    'username' => $request->input('account_info')['username'],
-                    'password' => Hash::make($request->input('account_info')['password'], ),
-                    'status' => $request->input('account_info')['status'],
-                    'profile_picture' => $request->input('account_info')['profile_picture'],
+            if ($request->has('user_info')) {
+                $user->update([
+                    'firstname' => $request->input('applicant_info')['applicant_firstname'],
+                    'middlename' => $request->input('applicant_info')['applicant_middlename'],
+                    'lastname' => $request->input('applicant_info')['applicant_lastname'],
+                    'extensionname' => $request->input('applicant_info')['applicant_extensionname'],
+                    'email' => $request->input('user_info')['email'],
+                    'password' => Hash::make($request->input('user_info')['password']),
+                    'user_type' => $request->input('user_info')['user_type'],
+                    'status' => $request->input('user_info')['status'],
+                ]);
+
+            } else {
+
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No Applicant2 found',
+                ], 404);
+            }
+
+            if ($request->has('company_info')) {
+                $applicant_company->update([
+                    'company_name' => $request->input('company_info')['company_name'],
+                    'year_establish' => $request->input('company_info')['year_establish'],
+                    'tel_no' => $request->input('company_info')['tel_no'],
+                    'fax_no' => $request->input('company_info')['fax_no'],
+                    'company_email' => $request->input('company_info')['company_email'],
+                    'business_organization_type' => $request->input('company_info')['business_organization_type'],
+                    'owner_name' => $request->input('company_info')['owner_name'],
+                    'region' => $request->input('company_info')['region'],
+                    'province' => $request->input('company_info')['province'],
+                    'municipality' => $request->input('company_info')['municipality'],
+                    'barangay' => $request->input('company_info')['barangay'],
+                    'address_street' => $request->input('company_info')['address_street'],
+                    'map_id' => $request->input('company_info')['map_id'],
+                    'latitude' => $request->input('company_info')['latitude'],
+                    'longitude' => $request->input('company_info')['longitude'],
+                    'marker_description' => $request->input('company_info')['marker_description'],
+                    'application_type' => $request->input('company_info')['application_type'],
+                    'application_date' => $request->input('company_info')['application_date'],
                 ]);
             } else {
 
@@ -229,6 +265,12 @@ class ApplicationController extends Controller
             }
 
             \DB::commit();
+            return $this->asJson([
+                "User Information" => $user,
+                "Applicant Information" => $applicant,
+                "Company Information" => $applicant_company,
+            ]);
+
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e]);

@@ -11,7 +11,7 @@ class Applicant extends Model
 {
     use HasFactory;
 
-    public $table = 'applicants';
+    public $table = 'applicant';
 
     protected $fillable = [
         'applicant_firstname',
@@ -21,6 +21,7 @@ class Applicant extends Model
         'designation',
         'profile_picture',
         'is_deleted',
+        'user_id',
     ];
 
     public function companyinfo()

@@ -9,7 +9,7 @@ class ApplicantCompanyInfo extends Model
 {
     use HasFactory;
 
-    public $table = 'applicant_company_informations';
+    public $table = 'applicant_company_information';
 
     protected $fillable = [
         'applicant_id',
