@@ -95,7 +95,6 @@ class ApplicationController extends Controller
                     'designation' => $request->input('applicant_info')['designation'],
                 ]);
             }
-
             if ($request->has('company_info')) {
                 $applicant_company = ApplicantCompanyInfo::create([
                     'applicant_id' => $applicant->id,
@@ -111,10 +110,16 @@ class ApplicationController extends Controller
                     'municipality' => $request->input('company_info')['municipality'],
                     'barangay' => $request->input('company_info')['barangay'],
                     'address_street' => $request->input('company_info')['address_street'],
-                    'map_id' => $request->input('company_info')['map_id'],
-                    'latitude' => $request->input('company_info')['latitude'],
-                    'longitude' => $request->input('company_info')['longitude'],
-                    'marker_description' => $request->input('company_info')['marker_description'],
+
+                    'map_id' => 0.11111,
+                    'latitude' => 121.123123,
+                    'longitude' => 12.090909,
+                    'marker_description' => "hotdog",
+
+                    // 'map_id' => $request->input('company_info')['map_id'],
+                    // 'latitude' => $request->input('company_info')['latitude'],
+                    // 'longitude' => $request->input('company_info')['longitude'],
+                    // 'marker_description' => $request->input('company_info')['marker_description'],
                     'application_type' => $request->input('company_info')['application_type'],
                     'application_date' => $request->input('company_info')['application_date'],
                 ]);
@@ -123,9 +128,11 @@ class ApplicationController extends Controller
             DB::commit();
             return response()->json([
                 'message' => 'Applicant created successfully.',
-                'applicant' => $applicant,
-                'user' => $user,
-                'company info' => $applicant_company,
+                'data' => [
+                    'applicant' => $applicant,
+                    'user' => $user,
+                    'company info' => $applicant_company,
+                ],
             ], 201);
 
         } catch (\Exception $e) {
@@ -315,8 +322,8 @@ class ApplicationController extends Controller
     public function destroy($id)
     {
         $applicant = Applicant::find($id);
-        // $applicant_account = ApplicantAccountInfo::where('applicant_id', '=', $id);
-        // $applicant_company = ApplicantCompanyInfo::where('applicant_id', '=', $id);
+        $applicant_account = ApplicantAccountInfo::where('applicant_id', '=', $id);
+        $applicant_company = ApplicantCompanyInfo::where('applicant_id', '=', $id);
 
         if ($applicant && $applicant_account && $applicant_company) {
             \DB::beginTransaction();
