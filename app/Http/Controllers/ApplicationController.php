@@ -128,9 +128,11 @@ class ApplicationController extends Controller
             DB::commit();
             return response()->json([
                 'message' => 'Applicant created successfully.',
-                'applicant' => $applicant,
-                'user' => $user,
-                'company info' => $applicant_company,
+                'data' => [
+                    'applicant' => $applicant,
+                    'user' => $user,
+                    'company info' => $applicant_company,
+                ],
             ], 201);
 
         } catch (\Exception $e) {
