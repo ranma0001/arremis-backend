@@ -4,10 +4,10 @@ namespace App\Models;
 
 use App\Models\Applicant;
 use App\Models\ApplicantCompanyInfo;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -33,12 +33,13 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'user_type',
-        'status',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'user_type',
+        'status',
     ];
 
     protected $casts = [

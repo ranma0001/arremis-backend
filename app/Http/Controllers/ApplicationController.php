@@ -23,27 +23,13 @@ class ApplicationController extends Controller
             'applicant_middlename' => 'nullable|string|min:1|max:100',
             'applicant_lastname' => 'nullable|string|min:1|max:100',
             'applicant_extensionname' => 'nullable|string',
-            'designation' => 'nullable|string',
-            'profile_picture' => 'nullable|string',
         ]);
 
         $validator_company = Validator::make($request->input('company_info'), [
             //APPLICANT COMPANY VALIDATION
             'company_name' => 'string|min:2|max:100|nullable',
             'year_establish' => 'nullable|numeric|between:1700,2022|nullable',
-            'tel_no' => 'string|nullable',
-            'fax_no' => 'string|nullable',
-            'company_email' => 'string|nullable',
             'business_organization_type' => 'numeric|nullable',
-            'region' => 'string|nullable',
-            'province' => 'string|nullable',
-            'municipality' => 'string|nullable',
-            'barangay' => 'string|nullable',
-            'address_street' => 'string|nullable',
-            'owner_name' => 'string|nullable',
-            'map_id' => 'string|nullable',
-            'latitude' => 'string|nullable',
-            'longitude' => 'string|nullable',
             'marker_description' => 'string|nullable',
             'application_type' => 'integer|nullable',
             'application_date' => 'date|nullable',
@@ -53,8 +39,6 @@ class ApplicationController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
             'password_confirmation' => 'min:6|required_with:password|same:password',
-            'user_type' => 'required|integer',
-            'status' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -80,8 +64,8 @@ class ApplicationController extends Controller
                     'extensionname' => $request->input('applicant_info')['applicant_extensionname'],
                     'email' => $request->input('user_info')['email'],
                     'password' => Hash::make($request->input('user_info')['password']),
-                    'user_type' => $request->input('user_info')['user_type'],
-                    'status' => $request->input('user_info')['status'],
+                    'user_type' => 1,
+                    'status' => 1,
                 ]);
             }
 
@@ -110,16 +94,10 @@ class ApplicationController extends Controller
                     'municipality' => $request->input('company_info')['municipality'],
                     'barangay' => $request->input('company_info')['barangay'],
                     'address_street' => $request->input('company_info')['address_street'],
-
-                    'map_id' => 0.11111,
-                    'latitude' => 121.123123,
-                    'longitude' => 12.090909,
-                    'marker_description' => "hotdog",
-
-                    // 'map_id' => $request->input('company_info')['map_id'],
-                    // 'latitude' => $request->input('company_info')['latitude'],
-                    // 'longitude' => $request->input('company_info')['longitude'],
-                    // 'marker_description' => $request->input('company_info')['marker_description'],
+                    'map_id' => $request->input('company_info')['map_id'],
+                    'latitude' => $request->input('company_info')['latitude'],
+                    'longitude' => $request->input('company_info')['longitude'],
+                    'marker_description' => $request->input('company_info')['marker_description'],
                     'application_type' => $request->input('company_info')['application_type'],
                     'application_date' => $request->input('company_info')['application_date'],
                 ]);
@@ -127,7 +105,6 @@ class ApplicationController extends Controller
 
             DB::commit();
             return response()->json([
-                'message' => 'Applicant created successfully.',
                 'data' => [
                     'applicant' => $applicant,
                     'user' => $user,
@@ -275,9 +252,11 @@ class ApplicationController extends Controller
             \DB::commit();
 
             return response()->json([
-                "User Information" => $user,
-                "Applicant Information" => $applicant,
-                "Company Information" => $applicant_company,
+                'data' => [
+                    'applicant' => $applicant,
+                    'user' => $user,
+                    'company info' => $applicant_company,
+                ],
             ]);
 
         } catch (\Exception $e) {
@@ -289,7 +268,8 @@ class ApplicationController extends Controller
     public function edit_is_delete(Request $request, int $id)
     {
 
-        $status = $request->input('status');
+        $status = $request->input('applicant_info')['is_deleted'];
+        $status = $status == 0 ? "Restored" : "Deleted";
 
         try {
             \DB::beginTransaction();
@@ -302,8 +282,10 @@ class ApplicationController extends Controller
                 \DB::commit();
                 return response()->json([
                     'status' => 200,
-                    'applicant' => $applicant,
                     'message' => "Applicant " . $status . " Successfully",
+                    'data' => [
+                        'applicant' => $applicant,
+                    ],
                 ], 200);
             } else {
                 return $this->asjson([
@@ -319,6 +301,7 @@ class ApplicationController extends Controller
         }
     }
 
+    //Do not use
     public function destroy($id)
     {
         $applicant = Applicant::find($id);
@@ -399,15 +382,11 @@ class ApplicationController extends Controller
 
     public function list_applicant(Request $request)
     {
-        // $query = Applicant::query()
-        // ->select('applicants.*', 'applicant_company_info.*')
-        // ->leftJoin('users', 'users.id', '=', 'applicants.user_id')
-        // ->leftJoin('applicant_company_info', 'users.id', '=', 'applicant_company_info.user_id');
-
         $query = Applicant::query()
             ->select('applicant.*', 'applicant_company_information.*')
             ->join('applicant_company_information', 'applicant.id', '=', 'applicant_company_information.applicant_id')
             ->join('users', 'users.id', '=', 'applicant.user_id');
+
 //paginate with filter
         $ALLOWED_FILTERS = [];
         $SEARCH_FIELDS = [];

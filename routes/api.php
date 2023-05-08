@@ -36,12 +36,12 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/auth/user_info', [JWTController::class, 'profile']);
 
     //Applicant
-    Route::post('/add_applicant', [ApplicationController::class, 'create_applicant']);
+    Route::post('applicant', [ApplicationController::class, 'create_applicant']);
     // Route::delete('applicants/{id}/delete', [ApplicationController::class, 'destroy']);
-    Route::put('applicants/delete/{id}', [ApplicationController::class, 'edit_is_delete']); //soft delete
-    Route::put('applicants/update/{id}', [ApplicationController::class, 'update_applicant']);
-    Route::get('applicants/show/{id}', [ApplicationController::class, 'show']);
-    Route::get('applicants/all_applicant', [ApplicationController::class, 'list_applicant']);
+    Route::put('applicant/archive/{id}', [ApplicationController::class, 'edit_is_delete']); //soft delete
+    Route::put('applicant/{id}', [ApplicationController::class, 'update_applicant']);
+    Route::get('applicant/{id}', [ApplicationController::class, 'show']);
+    Route::get('applicants', [ApplicationController::class, 'list_applicant']);
 
     //Facility
     Route::post('applicants/add_facility', [FacilityController::class, 'create_facility']);
