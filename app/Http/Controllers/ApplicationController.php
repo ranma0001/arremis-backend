@@ -7,12 +7,19 @@ use App\Models\Applicant;
 use App\Models\ApplicantCompanyInfo;
 use App\Models\User;
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class ApplicationController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function create_applicant(Request $request)
     {
 
@@ -273,8 +280,8 @@ class ApplicationController extends Controller
 
         try {
             \DB::beginTransaction();
-            $applicant = Applicant::find($id);
-            if ($request->has('applicant_info')) {
+            $applicant = Applicant::findOrFail($id);
+            if ($applicant != null) {
                 $applicant->update([
                     'is_deleted' => $request->input('applicant_info')['is_deleted'],
                 ]);
@@ -287,14 +294,12 @@ class ApplicationController extends Controller
                         'applicant' => $applicant,
                     ],
                 ], 200);
-            } else {
-                return $this->asjson([
-                    "code" => 400,
-                    "result" => 'error',
-                    "message" => "No Records Found",
-                ]);
             }
-
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 404,
+                "message" => "No Records Found",
+            ]);
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e]);

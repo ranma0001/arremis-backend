@@ -9,7 +9,7 @@ class NetworkDealers extends Model
 {
     use HasFactory;
 
-    public $table = 'network_dealers';
+    public $table = 'network_dealer';
 
     protected $fillable = [
         'applicant_id',

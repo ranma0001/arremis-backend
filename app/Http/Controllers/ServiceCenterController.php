@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ServiceCenterController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function create_service_center(Request $request)
     {
 

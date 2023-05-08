@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class EquipmentController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function create_equipment(Request $request)
     {
 
@@ -55,20 +62,30 @@ class EquipmentController extends Controller
 
     public function edit_is_delete(Request $request, int $id)
     {
+
+        $status = $request->is_deleted;
+        $status = $status == 0 ? "Restored" : "Deleted";
+
         try {
             \DB::beginTransaction();
-            $equipment = Equipment::find($id);
+            $equipment = Equipment::findOrFail($id);
+            if ($equipment != null) {
+                $equipment->update([
+                    'is_deleted' => $request->is_deleted,
+                ]);
 
-            $equipment->update([
-                'is_deleted' => $request->is_deleted,
-            ]);
+                \DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Equipment " . $status . "  Successfully",
+                ], 200);
+            }
+        } catch (ModelNotFoundException $e) {
 
-            \DB::commit();
             return response()->json([
-                'status' => 200,
-                'message' => "Equipment Deleted Successfully",
-            ], 200);
-
+                "code" => 404,
+                "message" => "No Records Found",
+            ]);
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e]);

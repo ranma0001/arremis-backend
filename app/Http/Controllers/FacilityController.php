@@ -3,12 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facility;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FacilityController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function create_facility(Request $request)
     {
 
@@ -60,26 +67,30 @@ class FacilityController extends Controller
 
     public function edit_is_delete(Request $request, int $id)
     {
+
+        $status = $request->is_deleted;
+        $status = $status == 0 ? "Restored" : "Deleted";
+
         try {
             \DB::beginTransaction();
-            $facility = Facility::find($id);
-            if ($request->has('facility_info')) {
+            $facility = Facility::findOrFail($id);
+            if ($facility != null) {
                 $facility->update([
-                    'is_deleted' => $request->input('facility_info')['is_deleted'],
+                    'is_deleted' => $request->is_deleted,
                 ]);
 
                 \DB::commit();
                 return response()->json([
                     'status' => 200,
-                    'message' => "Facility Deleted Successfully",
+                    'message' => "Facility " . $status . " Successfully",
                 ], 200);
-            } else {
-
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No Facility found',
-                ], 404);
             }
+        } catch (ModelNotFoundException $e) {
+
+            return response()->json([
+                "code" => 404,
+                "message" => "No Records Found",
+            ]);
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e]);

@@ -44,19 +44,20 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('applicants', [ApplicationController::class, 'list_applicant']);
 
     //Facility
-    Route::post('applicants/add_facility', [FacilityController::class, 'create_facility']);
-    Route::put('applicants/delete_facility/{id}', [FacilityController::class, 'edit_is_delete']);
-    Route::get('applicants/show_applicant/{id}', [FacilityController::class, 'show']);
-    Route::get('applicants/all_facility', [FacilityController::class, 'list_facility']);
+    Route::post('facility', [FacilityController::class, 'create_facility']);
+    Route::put('facility/archive/{id}', [FacilityController::class, 'edit_is_delete']);
+    Route::get('facility/{id}', [FacilityController::class, 'show']);
+    Route::get('facilities', [FacilityController::class, 'list_facility']);
 
     //Equipment
-    Route::post('applicants/add_equipment', [EquipmentController::class, 'create_equipment']);
-    Route::put('applicants/delete_equipment/{id}', [EquipmentController::class, 'edit_is_delete']);
-    Route::get('applicants/all_equipment', [EquipmentController::class, 'list_equipment']);
+    Route::post('equipment', [EquipmentController::class, 'create_equipment']);
+    Route::put('equipment/archive/{id}', [EquipmentController::class, 'edit_is_delete']);
+    Route::get('equipments', [EquipmentController::class, 'list_equipment']);
 
     //Network Dealer
-    Route::post('applicants/add_network_dealer', [NetworkDealersController::class, 'create_network_dealers']);
-    Route::put('applicants/delete_network_dealer/{id}', [NetworkDealersController::class, 'edit_is_delete']);
+    Route::post('network_dealer', [NetworkDealersController::class, 'create_network_dealers']);
+    Route::put('network_dealer/archive/{id}', [NetworkDealersController::class, 'edit_is_delete']);
+    Route::get('network_dealers', [NetworkDealersController::class, 'list_network_dealer']);
 
     //Service Center
     Route::post('applicants/add_service_center', [ServiceCenterController::class, 'create_service_center']);
