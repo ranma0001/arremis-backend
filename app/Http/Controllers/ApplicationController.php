@@ -392,9 +392,15 @@ class ApplicationController extends Controller
 
     public function list_applicant(Request $request)
     {
-        $query = Applicant::select('*')
-            ->with('user.applicantCompanyInfo');
+        // $query = Applicant::query()
+        // ->select('applicants.*', 'applicant_company_info.*')
+        // ->leftJoin('users', 'users.id', '=', 'applicants.user_id')
+        // ->leftJoin('applicant_company_info', 'users.id', '=', 'applicant_company_info.user_id');
 
+        $query = Applicant::query()
+            ->select('applicant.*', 'applicant_company_information.*')
+            ->join('applicant_company_information', 'applicant.id', '=', 'applicant_company_information.applicant_id')
+            ->join('users', 'users.id', '=', 'applicant.user_id');
 //paginate with filter
         $ALLOWED_FILTERS = [];
         $SEARCH_FIELDS = [];
@@ -403,6 +409,7 @@ class ApplicationController extends Controller
         $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
         return response()->json([
             'applicant' => $response,
+
         ]);
 
     }
