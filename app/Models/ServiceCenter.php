@@ -9,12 +9,12 @@ class ServiceCenter extends Model
 {
     use HasFactory;
 
-    public $table = 'service_centers';
+    public $table = 'service_center';
 
     protected $fillable = [
         'applicant_id',
         'center_name',
-        'contact',
+        'contact',  
         'email',
         'address',
         'longitude',

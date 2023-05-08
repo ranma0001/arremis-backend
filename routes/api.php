@@ -47,12 +47,12 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('applicants/add_facility', [FacilityController::class, 'create_facility']);
     Route::put('applicants/delete_facility/{id}', [FacilityController::class, 'edit_is_delete']);
     Route::get('applicants/show_applicant/{id}', [FacilityController::class, 'show']);
-    Route::get('applicants/all_facility', [FacilityController::class, 'view_facility']);
+    Route::get('applicants/all_facility', [FacilityController::class, 'list_facility']);
 
     //Equipment
     Route::post('applicants/add_equipment', [EquipmentController::class, 'create_equipment']);
     Route::put('applicants/delete_equipment/{id}', [EquipmentController::class, 'edit_is_delete']);
-    Route::get('applicants/all_equipment', [EquipmentController::class, 'view_facility']);
+    Route::get('applicants/all_equipment', [EquipmentController::class, 'list_equipment']);
 
     //Network Dealer
     Route::post('applicants/add_network_dealer', [NetworkDealersController::class, 'create_network_dealers']);
@@ -61,5 +61,5 @@ Route::group(['middleware' => 'api'], function ($router) {
     //Service Center
     Route::post('applicants/add_service_center', [ServiceCenterController::class, 'create_service_center']);
     Route::put('applicants/delete_service_center/{id}', [ServiceCenterController::class, 'edit_is_delete']);
-
+    Route::put('applicants/update_service_center/{id}', [ServiceCenterController::class, 'update_service_center']);
 });

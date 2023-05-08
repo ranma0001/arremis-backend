@@ -116,7 +116,7 @@ class FacilityController extends Controller
 
     }
 
-    public function view_facility(Request $request)
+    public function list_facility(Request $request)
     {
         $query = Facility::select('*');
 

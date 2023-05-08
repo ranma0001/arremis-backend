@@ -355,7 +355,7 @@ class ApplicationController extends Controller
             ->select('applicant_firstname', 'applicant_middlename', 'applicant_lastname', 'applicant_extensionname',
                 'designation')
             ->where('id', $id)
-            ->where('is_deleted', 1)
+            ->where('is_deleted', 0)
             ->where(function ($query) use ($first_name) {
                 if ($first_name !== null) {
                     $query->where('applicant_firstname', 'like', '%' . $first_name . '%');
@@ -395,7 +395,7 @@ class ApplicationController extends Controller
         $query = Applicant::select('*')
             ->with('user.applicantCompanyInfo');
 
-//filtering
+//paginate with filter
         $ALLOWED_FILTERS = [];
         $SEARCH_FIELDS = [];
         $JSON_FIELDS = [];
