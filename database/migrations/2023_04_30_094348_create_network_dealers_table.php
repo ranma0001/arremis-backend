@@ -13,7 +13,7 @@ class CreateNetworkDealersTable extends Migration
      */
     public function up()
     {
-        Schema::create('network_dealers', function (Blueprint $table) {
+        Schema::create('network_dealer', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
             $table->string('company_name');
@@ -35,6 +35,6 @@ class CreateNetworkDealersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('network_dealers');
+        Schema::dropIfExists('network_dealer');
     }
 }

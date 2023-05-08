@@ -13,13 +13,15 @@ class CreateApplicantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('applicants', function (Blueprint $table) {
+        Schema::create('applicant', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
             $table->string('applicant_firstname');
-            $table->string('applicant_middlename');
+            $table->string('applicant_middlename')->nullable();
             $table->string('applicant_lastname');
-            $table->string('applicant_extensionname');
-            $table->string('designation');
+            $table->string('applicant_extensionname')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->string('is_deleted')->default('0');
             $table->timestamps();
         });
@@ -32,6 +34,6 @@ class CreateApplicantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applicants');
+        Schema::dropIfExists('applicant');
     }
 }

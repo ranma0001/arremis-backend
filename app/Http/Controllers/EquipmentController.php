@@ -75,7 +75,7 @@ class EquipmentController extends Controller
         }
     }
 
-    public function view_facility(Request $request)
+    public function list_equipment(Request $request)
     {
         $query = Equipment::select('*');
 

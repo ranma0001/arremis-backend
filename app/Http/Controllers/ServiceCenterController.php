@@ -66,7 +66,8 @@ class ServiceCenterController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => "Service Center Deleted Successfully",
+                'Service Center' => $service_center,
+                'message' => $request->is_deleted == 0 ? "Service Center Deleted Successfully" : "Service Center Recovered Successfully",
             ], 200);
         } catch (\Exception $e) {
             \DB::rollBack();

@@ -13,27 +13,27 @@ class ApplicantCompanyInformation extends Migration
      */
     public function up()
     {
-        Schema::create('applicant_company_informations', function (Blueprint $table) {
+        Schema::create('applicant_company_information', function (Blueprint $table) {
             $table->id();
             $table->foreignId('applicant_id');
             $table->string('company_name');
             $table->string('year_establish');
-            $table->string('tel_no');
-            $table->string('fax_no');
-            $table->string('email');
-            $table->string('business_organization_type');
-            $table->string('region');
-            $table->string('province');
-            $table->string('municipality');
-            $table->string('barangay');
-            $table->string('address_street');
-            $table->string('owner_name');
-            $table->decimal('map_id');
-            $table->double('latitude');
-            $table->double('longitude');
-            $table->string('marker_description');
-            $table->string('application_type');
-            $table->date('application_date');
+            $table->string('tel_no')->nullable();
+            $table->string('fax_no')->nullable();
+            $table->string('company_email')->nullable();
+            $table->string('business_organization_type')->nullable();
+            $table->string('region')->nullable();
+            $table->string('province')->nullable();
+            $table->string('municipality')->nullable();
+            $table->string('barangay')->nullable();
+            $table->string('address_street')->nullable();
+            $table->string('owner_name')->nullable();
+            $table->decimal('map_id')->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
+            $table->string('marker_description')->nullable();
+            $table->string('application_type')->nullable();
+            $table->date('application_date')->nullable();
             $table->timestamps();
         });
     }
@@ -45,6 +45,6 @@ class ApplicantCompanyInformation extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applicant_company_informations');
+        Schema::dropIfExists('applicant_company_information');
     }
 }

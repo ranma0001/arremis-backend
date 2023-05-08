@@ -96,7 +96,7 @@ class Controller extends BaseController
         $query = $query->skip($skip)->take($take);
 
         // sorting
-        $sort_key = request('sort_key', 'id', 'created_at', 'updated_at', 'last_name', 'date_hired', 'total', 'start_date', 'file_name', 'file_date', 'name', 'email', 'created_by', 'section_name', 'work_schedule_name', 'holiday_name', 'time_data_id', 'date', 'time_off_type', 'time_off_code', 'balance_credit', 'step', 'grade', 'effectivity_date', 'job_info_effectivity_date', 'work_sched_effectivity_date', 'time_data_name');
+        $sort_key = request('sort_key', 'id', 'created_at', 'updated_at', 'last_name', 'total', 'start_date', 'file_name', 'file_date', 'name', 'email', 'created_by', 'user.applicant_company_info.company_name', 'applicant_firstname');
         $sort_dir = request('sort_dir', 'descend') == 'descend' ? 'desc' : 'asc';
         if (is_array($sort_key)) {
             foreach ($sort_key as $item) {

@@ -9,7 +9,7 @@ class Facility extends Model
 {
     use HasFactory;
 
-    public $table = 'facilities';
+    public $table = 'facility';
 
     protected $fillable = [
         'applicant_id',

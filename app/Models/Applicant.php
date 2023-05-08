@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\ApplicantAccountInfo;
 use App\Models\ApplicantCompanyInfo;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ class Applicant extends Model
 {
     use HasFactory;
 
-    public $table = 'applicants';
+    public $table = 'applicant';
 
     protected $fillable = [
         'applicant_firstname',
@@ -19,16 +19,18 @@ class Applicant extends Model
         'applicant_lastname',
         'applicant_extensionname',
         'designation',
+        'profile_picture',
         'is_deleted',
+        'user_id',
     ];
 
-    public function accountinfo()
+    public function user()
     {
-        return $this->hasOne(ApplicantAccountInfo::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function companyinfo()
+    public function applicantCompanyInfo()
     {
-        return $this->hasOne(ApplicantCompanyInfo::class);
+        return $this->belongsTo(ApplicantCompanyInfo::class);
     }
 }
