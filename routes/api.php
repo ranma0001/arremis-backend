@@ -60,7 +60,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('network_dealers', [NetworkDealersController::class, 'list_network_dealer']);
 
     //Service Center
-    Route::post('applicants/add_service_center', [ServiceCenterController::class, 'create_service_center']);
-    Route::put('applicants/delete_service_center/{id}', [ServiceCenterController::class, 'edit_is_delete']);
-    Route::put('applicants/update_service_center/{id}', [ServiceCenterController::class, 'update_service_center']);
+    Route::post('service_center', [ServiceCenterController::class, 'create_service_center']);
+    Route::put('service_center/archive/{id}', [ServiceCenterController::class, 'edit_is_delete']);
+    Route::put('service_center/{id}', [ServiceCenterController::class, 'update_service_center']);
+    Route::get('service_centers', [ServiceCenterController::class, 'list_service_center']);
 });
