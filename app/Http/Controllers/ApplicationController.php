@@ -16,23 +16,26 @@ class ApplicationController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['register']]);
+        $this->middleware('auth:api', ['except' => ['create_applicant']]);
     }
 
     public function create_applicant(Request $request)
     {
-
-        $this->validateInput($request);
+        $validator = $this->validateInput($request);
 
         $applicantInfo = $request->input('applicant_info', []);
         $companyInfo = $request->input('company_info', []);
         $userInfo = $request->input('user_info', []);
 
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
         try {
 
             \DB::beginTransaction();
 
-            if ($request->has('user_info')) {
+            if ($userInfo) {
                 $user = User::create([
                     'firstname' => $request->input('applicant_info')['applicant_firstname'],
                     'middlename' => $request->input('applicant_info')['applicant_middlename'],
@@ -45,7 +48,7 @@ class ApplicationController extends Controller
                 ]);
             }
 
-            if ($request->has('applicant_info')) {
+            if ($applicantInfo) {
                 $applicant = Applicant::create([
                     'user_id' => $user->id,
                     'applicant_firstname' => $request->input('applicant_info')['applicant_firstname'],
@@ -55,7 +58,7 @@ class ApplicationController extends Controller
                     'designation' => $request->input('applicant_info')['designation'],
                 ]);
             }
-            if ($request->has('company_info')) {
+            if ($companyInfo) {
                 $applicant_company = ApplicantCompanyInfo::create([
                     'applicant_id' => $applicant->id,
                     'company_name' => $request->input('company_info')['company_name'],
@@ -70,10 +73,10 @@ class ApplicationController extends Controller
                     'municipality' => $request->input('company_info')['municipality'],
                     'barangay' => $request->input('company_info')['barangay'],
                     'address_street' => $request->input('company_info')['address_street'],
-                    'map_id' => $request->input('company_info')['map_id'],
-                    'latitude' => $request->input('company_info')['latitude'],
-                    'longitude' => $request->input('company_info')['longitude'],
-                    'marker_description' => $request->input('company_info')['marker_description'],
+                    // 'map_id' => $request->input('company_info')['map_id'],
+                    // 'latitude' => $request->input('company_info')['latitude'],
+                    // 'longitude' => $request->input('company_info')['longitude'],
+                    // 'marker_description' => $request->input('company_info')['marker_description'],
                     'application_type' => $request->input('company_info')['application_type'],
                     'application_date' => $request->input('company_info')['application_date'],
                 ]);
@@ -386,7 +389,7 @@ class ApplicationController extends Controller
 
     private function validateInput(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        return Validator::make($request->all(), [
             //APPLICANT VALIDATION
             'applicant_info.applicant_firstname' => 'nullable|string|min:2|max:100',
             'applicant_info.applicant_middlename' => 'nullable|string|min:1|max:100',
@@ -416,8 +419,8 @@ class ApplicationController extends Controller
             'company_info.application_date' => 'nullable|date',
             'user_info.password' => 'required|string|min:6',
             'user_info.password_confirmation' => 'min:6|required_with:user_info.password|same:user_info.password',
-            'user_info.user_type' => 'required|integer',
-            'user_info.status' => 'required|integer',
+            // 'user_info.user_type' => 'required|integer',
+            // 'user_info.status' => 'required|integer',
         ]);
     }
 
