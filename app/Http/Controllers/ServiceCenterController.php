@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServiceCenter;
+use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,20 +63,32 @@ class ServiceCenterController extends Controller
 
     public function edit_is_delete(Request $request, int $id)
     {
+        $status = $request->is_deleted;
+        $status = $status == 0 ? "Restored" : "Deleted";
+
         try {
-            \DB::beginTransaction();
-            $service_center = ServiceCenter::find($id);
 
-            $service_center->update([
-                'is_deleted' => $request->is_deleted,
-            ]);
-            \DB::commit();
+            DB::beginTransaction();
+            $service_center = ServiceCenter::findOrFail($id);
 
+            if ($service_center != null) {
+                $service_center->update([
+                    'is_deleted' => $request->is_deleted,
+                ]);
+
+                DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Service Center " . $status . " Successfully",
+                ], 200);
+            }
+
+        } catch (ModelNotFoundException $e) {
             return response()->json([
-                'status' => 200,
-                'Service Center' => $service_center,
-                'message' => $request->is_deleted == 0 ? "Service Center Deleted Successfully" : "Service Center Recovered Successfully",
-            ], 200);
+                "code" => 400,
+                "result" => 'error',
+                "message" => "No Records Found",
+            ]);
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e], 404);
@@ -85,31 +99,52 @@ class ServiceCenterController extends Controller
     {
         try {
             \DB::beginTransaction();
-            $service_center = ServiceCenter::find($id);
+            $service_center = ServiceCenter::findOrFail($id);
 
-            $service_center->update([
-                'applicant_id' => $request->applicant_id,
-                'center_name' => $request->center_name,
-                'contact' => $request->contact,
-                'email' => $request->email,
-                'longitude' => $request->longitude,
-                'latitude' => $request->latitude,
-                'address' => $request->address,
-                'review_comment' => $request->review_comment,
-                'reviewed_by' => $request->is_delreviewed_byeted,
-                'is_verified' => $request->is_verified,
-                'review_level' => $request->review_level,
-            ]);
-            \DB::commit();
+            if ($service_center != null) {
+                $service_center->update([
+                    'applicant_id' => $request->applicant_id,
+                    'center_name' => $request->center_name,
+                    'contact' => $request->contact,
+                    'email' => $request->email,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
+                    'address' => $request->address,
+                    'review_comment' => $request->review_comment,
+                    'reviewed_by' => $request->is_delreviewed_byeted,
+                    'is_verified' => $request->is_verified,
+                    'review_level' => $request->review_level,
+                ]);
+                \DB::commit();
 
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Service Center Updated Successfully",
+                ], 200);
+            }
+        } catch (ModelNotFoundException $e) {
             return response()->json([
-                'status' => 200,
-                'message' => "Service Center Updated Successfully",
-            ], 200);
+                "code" => 404,
+                "message" => "No Records Found",
+            ]);
         } catch (\Exception $e) {
             \DB::rollBack();
             return response()->json([$e], 404);
         }
+    }
+
+    public function list_service_center(Request $request)
+    {
+        $query = ServiceCenter::select('*');
+
+        //filtering
+        $ALLOWED_FILTERS = [];
+        $SEARCH_FIELDS = [];
+        $JSON_FIELDS = [];
+        $BOOL_FIELDS = [];
+        $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
+
+        return response()->json($response);
     }
 
 }
