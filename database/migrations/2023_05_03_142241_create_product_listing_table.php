@@ -24,6 +24,7 @@ class CreateProductListingTable extends Migration
             $table->string('assembler')->nullable();
             $table->string('distributor')->nullable();
             $table->string('dealer')->nullable();
+            $table->string('importer')->nullable();
             $table->string('exporter')->nullable();
             $table->string('cc_no')->nullable();
             $table->string('country_manufacturer')->nullable();

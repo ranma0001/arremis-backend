@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\NetworkDealersController;
+use App\Http\Controllers\ProductListingController;
 use App\Http\Controllers\ServiceCenterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -64,4 +65,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::put('service_center/archive/{id}', [ServiceCenterController::class, 'edit_is_delete']);
     Route::put('service_center/{id}', [ServiceCenterController::class, 'update_service_center']);
     Route::get('service_centers', [ServiceCenterController::class, 'list_service_center']);
+
+    //Product Listing
+    Route::post('product_listing', [ProductListingController::class, 'create_product_listing']);
+    Route::get('product_listings', [ProductListingController::class, 'list_product_listing']);
 });

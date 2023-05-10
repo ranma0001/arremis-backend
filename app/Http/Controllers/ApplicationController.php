@@ -307,6 +307,7 @@ class ApplicationController extends Controller
             'application_date' => 'date|nullable',
         ]);
 
+        //if 1 = Create applicant else update applicant
         if ($isCreate == 1) {
 
             $validator_account = Validator::make($request->input('user_info'), [
@@ -315,7 +316,6 @@ class ApplicationController extends Controller
                 'user_type' => 'required|integer',
                 'status' => 'required|integer',
             ]);
-
         } else {
             $validator_account = Validator::make($request->input('user_info'), [
                 'password' => 'required|string|min:6',
