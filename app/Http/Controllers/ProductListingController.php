@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductListing;
+use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductListingController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('custom.jwt');
+    }
 
     public function create_product_listing(Request $request)
     {
@@ -30,8 +37,41 @@ class ProductListingController extends Controller
             ], 201);
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
 
+            return response()->json([$e]);
+        }
+    }
+
+    public function edit_is_delete(Request $request, int $id)
+    {
+
+        $status = $request->is_deleted;
+        $status = $status == 0 ? "Restored" : "Deleted";
+
+        try {
+            \DB::beginTransaction();
+            $product_listing = ProductListing::findOrFail($id);
+
+            if ($product_listing != null) {
+                $product_listing->update([
+                    'is_deleted' => $request->is_deleted,
+                ]);
+
+                DB::commit();
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Product Listing  " . $status . " Successfully",
+                ], 200);
+            }
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 400,
+                "result" => 'error',
+                "message" => "No Records Found",
+            ]);
+        } catch (\Exception $e) {
+            \DB::rollBack();
             return response()->json([$e]);
         }
     }

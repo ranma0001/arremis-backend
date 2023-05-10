@@ -16,7 +16,7 @@ class ApplicationController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['create_applicant']]);
+        $this->middleware('custom.jwt', ['except' => ['create_applicant']]);
     }
 
     public function create_applicant(Request $request)

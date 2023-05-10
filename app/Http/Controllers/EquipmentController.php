@@ -12,7 +12,7 @@ class EquipmentController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('custom.jwt');
     }
 
     public function create_equipment(Request $request)

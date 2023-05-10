@@ -68,5 +68,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     //Product Listing
     Route::post('product_listing', [ProductListingController::class, 'create_product_listing']);
+    Route::put('product_listing/archive/{id}', [ServiceCenterController::class, 'edit_is_delete']);
     Route::get('product_listings', [ProductListingController::class, 'list_product_listing']);
+
 });

@@ -12,7 +12,7 @@ class NetworkDealersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('custom.jwt');
     }
 
     public function create_network_dealers(Request $request)
