@@ -51,7 +51,7 @@ class CreateMyFunction extends Migration
         END
     ');
 
-    DB::unprepared('
+        DB::unprepared('
         CREATE FUNCTION fn_facility_status(input INT)
         RETURNS VARCHAR(50)
         BEGIN
@@ -66,7 +66,6 @@ class CreateMyFunction extends Migration
             RETURN output;
         END
     ');
-
 
     }
 

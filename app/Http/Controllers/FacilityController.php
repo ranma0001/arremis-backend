@@ -22,14 +22,14 @@ class FacilityController extends Controller
         $validator = Validator::make($request->all(), [
 
             //APPLICANT VALIDATION
-            'applicant_id' => 'required|integer',
-            'facility_name' => 'required|string|min:2|max:100',
-            'facility_quantity' => 'required|integer',
-            'status' => 'required|integer',
-            'image_string' => 'nullable|string',
-            'review_comment' => 'nullable|string',
-            'reviewed_by' => 'nullable|string',
-            'is_verified' => 'nullable|integer',
+            'facilities.*.application_id' => 'required|integer',
+            'facilities.*.facility_name' => 'required|string|min:2|max:100',
+            'facilities.*.facility_quantity' => 'required|integer',
+            'facilities.*.status' => 'required|integer',
+            //'facilities.*.image_string' => 'nullable|string',
+            'facilities.*.review_comment' => 'nullable|string',
+            'facilities.*.reviewed_by' => 'nullable|string',
+            'facilities.*.is_verified' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -38,28 +38,50 @@ class FacilityController extends Controller
 
         try {
 
-            \DB::beginTransaction();
-            $facility = Facility::create([
-                // 'applicant_id' => $request->input('applicant_id'),
-                'applicant_id' => $request->applicant_id,
-                'facility_name' => $request->facility_name,
-                'facility_quantity' => $request->facility_quantity,
-                'status' => $request->status,
-                'image_string' => $request->image_string,
-                'review_comment' => $request->review_comment,
-                'reviewed_by' => $request->reviewed_by,
-                'is_verified' => $request->is_verified,
-                'review_level' => $request->review_level,
-            ]);
+            DB::beginTransaction();
 
-            \DB::commit();
+            $facilities = $request->input('facilities');
+            $applicationId = 0;
+            if (!empty($facilities) && is_array($facilities)) {
+                $firstRow = $facilities[0];
+                $applicationId = $firstRow['application_id'];
+
+            }
+
+            DB::table('facility')->where('application_id', $applicationId)->delete();
+
+            $facilityArray = $request->input('facilities');
+
+            if (!is_array($facilityArray)) {
+                throw new \Exception('Invalid facility data.');
+            }
+
+            $createdFacility = [];
+            foreach ($facilityArray as $facilityData) {
+
+                $facility = Facility::create([
+                    // 'applicant_id' => $request->input('applicant_id'),
+                    'application_id' => $facilityData['application_id'],
+                    'facility_name' => $facilityData['facility_name'],
+                    'facility_quantity' => $facilityData['facility_quantity'],
+                    'image_string' => $facilityData['image_string'],
+                    'review_comment' => $facilityData['review_comment'],
+                    'reviewed_by' => $facilityData['reviewed_by'],
+                    'is_verified' => $facilityData['is_verified'],
+                    'review_level' => $facilityData['review_level'],
+                    'status' => $facilityData['status'],
+                ]);
+
+                $createdFacility[] = $facility;
+            }
+            DB::commit();
             return response()->json([
-                'message' => 'Facility created successfully.',
-                'facility' => $facility,
+                'message' => 'Facilities created successfully.',
+                'facility' => $createdFacility,
             ], 201);
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
 
             return response()->json([$e]);
         }
@@ -72,14 +94,14 @@ class FacilityController extends Controller
         $status = $status == 0 ? "Restored" : "Deleted";
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $facility = Facility::findOrFail($id);
             if ($facility != null) {
                 $facility->update([
                     'is_deleted' => $request->is_deleted,
                 ]);
 
-                \DB::commit();
+                DB::commit();
                 return response()->json([
                     'status' => 200,
                     'message' => "Facility " . $status . " Successfully",
@@ -92,25 +114,20 @@ class FacilityController extends Controller
                 "message" => "No Records Found",
             ]);
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             return response()->json([$e]);
         }
     }
 
     public function show(Request $request, $id)
     {
-        $facilityName = $request->input('facilityName');
+        //$facilityName = $request->input('facilityName');
 
         $facility = Facility::query()
-            ->select('applicant_id', 'applicant_id', 'facility_name', 'facility_quantity',
+            ->select('application_id', 'application_id', 'facility_name', 'facility_quantity',
                 DB::raw('fn_facility_status(status) as status'), 'image_string', 'review_comment',
                 'reviewed_by', 'is_verified', 'review_level', 'is_deleted')
             ->where('id', $id)
-            ->where(function ($query) use ($facilityName) {
-                if ($facilityName !== null) {
-                    $query->where('facility_name', 'like', '%' . $facilityName . '%');
-                }
-            })
             ->first();
 
         if ($facility != null) {
@@ -140,4 +157,5 @@ class FacilityController extends Controller
 
         return response()->json($response);
     }
+
 }

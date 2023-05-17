@@ -12,7 +12,7 @@ class Facility extends Model
     public $table = 'facility';
 
     protected $fillable = [
-        'applicant_id',
+        'application_id',
         'facility_name',
         'facility_quantity',
         'status',

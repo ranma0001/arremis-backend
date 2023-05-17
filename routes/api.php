@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\NetworkDealersController;
 use App\Http\Controllers\ProductListingController;
@@ -37,12 +39,15 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/auth/user_info', [JWTController::class, 'profile']);
 
     //Applicant
-    Route::post('applicant', [ApplicationController::class, 'create_applicant']);
-    // Route::delete('applicants/{id}/delete', [ApplicationController::class, 'destroy']);
-    Route::put('applicant/archive/{id}', [ApplicationController::class, 'edit_is_delete']); //soft delete
-    Route::put('applicant/{id}', [ApplicationController::class, 'update_applicant']);
-    Route::get('applicant/{id}', [ApplicationController::class, 'show']);
-    Route::get('applicants', [ApplicationController::class, 'list_applicant']);
+    Route::post('applicant', [ApplicantController::class, 'create_applicant']);
+    Route::put('applicant/archive/{id}', [ApplicantController::class, 'edit_is_delete']); //soft delete
+    Route::put('applicant/{id}', [ApplicantController::class, 'update_applicant']);
+    Route::get('applicant/{id}', [ApplicantController::class, 'show']);
+    Route::get('applicants', [ApplicantController::class, 'list_applicant']);
+
+    //Application
+    Route::post('application', [ApplicationController::class, 'create_application']);
+    Route::get('applications', [ApplicationController::class, 'list_application_with_data']);
 
     //Facility
     Route::post('facility', [FacilityController::class, 'create_facility']);
@@ -70,5 +75,9 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('product_listing', [ProductListingController::class, 'create_product_listing']);
     Route::put('product_listing/archive/{id}', [ServiceCenterController::class, 'edit_is_delete']);
     Route::get('product_listings', [ProductListingController::class, 'list_product_listing']);
+
+    #### File Upload Response
+    Route::post('/file', [FileController::class, 'upload_file']);
+    Route::get('/file', [FileController::class, 'read_file']);
 
 });

@@ -15,25 +15,20 @@ class CreateFacilitiesTable extends Migration
     {
         Schema::create('facility', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
+            $table->foreignId('application_id');
             $table->string('facility_name');
             $table->integer('facility_quantity');
-            $table->integer('status');
-            $table->string('image_string');
-            $table->string('review_comment');
-            $table->string('reviewed_by');
-            $table->integer('is_verified');
-            $table->integer('review_level');
+            $table->integer('status')->nullable();
+            $table->string('image_string')->nullable();
+            $table->string('review_comment')->nullable();
+            $table->string('reviewed_by')->nullable();
+            $table->integer('is_verified')->nullable();
+            $table->integer('review_level')->nullable();
             $table->integer('is_deleted')->default('0');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('facility');

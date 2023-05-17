@@ -14,9 +14,9 @@ class CustomJWTMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Invalid token'], 401);
-        } catch (JWTException $es) {
-            return response()->json(['error' => 'Invalid token'], 401);
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (Exception $es) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         if (!$user) {

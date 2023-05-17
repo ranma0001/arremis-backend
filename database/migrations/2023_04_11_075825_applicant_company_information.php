@@ -32,8 +32,7 @@ class ApplicantCompanyInformation extends Migration
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->string('marker_description')->nullable();
-            $table->string('application_type')->nullable();
-            $table->date('application_date')->nullable();
+            $table->json('classification')->nullable();
             $table->timestamps();
         });
     }

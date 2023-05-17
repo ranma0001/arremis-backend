@@ -12,9 +12,9 @@ class ServiceCenter extends Model
     public $table = 'service_center';
 
     protected $fillable = [
-        'applicant_id',
+        'application_id',
         'center_name',
-        'contact',  
+        'contact',
         'email',
         'address',
         'longitude',

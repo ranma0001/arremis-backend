@@ -22,7 +22,7 @@ class ServiceCenterController extends Controller
         $validator = Validator::make($request->all(), [
 
             //APPLICANT VALIDATION
-            'applicant_id' => 'required|integer',
+            'application_id' => 'required|integer',
             'center_name' => 'required|string|min:2|max:100',
 
         ]);
@@ -35,7 +35,7 @@ class ServiceCenterController extends Controller
             \DB::beginTransaction();
             $service_center = ServiceCenter::create([
                 // 'applicant_id' => $request->input('applicant_id'),
-                'applicant_id' => $request->applicant_id,
+                'application_id' => $request->application_id,
                 'center_name' => $request->center_name,
                 'contact' => $request->contact,
                 'email' => $request->email,
@@ -103,7 +103,7 @@ class ServiceCenterController extends Controller
 
             if ($service_center != null) {
                 $service_center->update([
-                    'applicant_id' => $request->applicant_id,
+                    'application_id' => $request->application_id,
                     'center_name' => $request->center_name,
                     'contact' => $request->contact,
                     'email' => $request->email,

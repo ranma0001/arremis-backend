@@ -15,7 +15,7 @@ class CreateNetworkDealersTable extends Migration
     {
         Schema::create('network_dealer', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
+            $table->foreignId('application_id');
             $table->string('company_name');
             $table->string('contact');
             $table->string('address');

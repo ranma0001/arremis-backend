@@ -31,8 +31,12 @@ class ApplicantCompanyInfo extends Model
         'latitude',
         'longitude',
         'marker_description',
-        'application_type',
-        'application_date',
+        'company_email',
+        'classification',
+    ];
+
+    protected $casts = [
+        'classification' => 'array',
     ];
 
     public function applicants()
@@ -44,5 +48,4 @@ class ApplicantCompanyInfo extends Model
     {
         return $this->hasManyThrough(User::class, Applicant::class);
     }
-
 }

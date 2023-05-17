@@ -21,9 +21,8 @@ class NetworkDealersController extends Controller
         $validator = Validator::make($request->all(), [
 
             //APPLICANT VALIDATION
-            'applicant_id' => 'required|integer',
-            'company_name' => 'required|string|min:2|max:100',
-
+            'application_id' => 'integer',
+            'company_name' => 'string|min:2|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -31,27 +30,49 @@ class NetworkDealersController extends Controller
         }
         try {
 
-            \DB::beginTransaction();
-            $network_dealer = NetworkDealers::create([
-                // 'applicant_id' => $request->input('applicant_id'),
-                'applicant_id' => $request->applicant_id,
-                'company_name' => $request->company_name,
-                'contact' => $request->contact,
-                'address' => $request->address,
-                'review_comment' => $request->review_comment,
-                'reviewed_by' => $request->reviewed_by,
-                'is_verified' => $request->is_verified,
-                'review_level' => $request->review_level,
-            ]);
+            DB::beginTransaction();
 
-            \DB::commit();
+            $old_network_dealers = $request->input('network_dealers');
+            $applicationId = 0;
+            if (!empty($old_network_dealers) && is_array($old_network_dealers)) {
+                $firstRow = $old_network_dealers[0];
+                $applicationId = $firstRow['application_id'];
+
+            }
+
+            DB::table('network_dealer')->where('application_id', $applicationId)->delete();
+
+            $networkDealerArray = $request->input('network_dealers');
+
+            if (!is_array($networkDealerArray)) {
+                throw new \Exception('Invalid network dealer data.');
+            }
+
+            $createdNetworkDealerArray = [];
+
+            foreach ($networkDealerArray as $networkDealerData) {
+                $network_dealer = NetworkDealers::create([
+                    // 'applicant_id' => $request->input('applicant_id'),
+                    'application_id' => $networkDealerData['application_id'],
+                    'company_name' => $networkDealerData['company_name'],
+                    'contact' => $networkDealerData['contact'],
+                    'address' => $networkDealerData['address'],
+                    'review_comment' => $networkDealerData['review_comment'],
+                    'reviewed_by' => $networkDealerData['reviewed_by'],
+                    'is_verified' => $networkDealerData['is_verified'],
+                    'review_level' => $networkDealerData['review_level'],
+                ]);
+                $createdNetworkDealer[] = $network_dealer;
+
+            }
+            DB::commit();
             return response()->json([
                 'message' => 'Network Dealer created successfully.',
-                'Network Dealers' => $network_dealer,
+                'Network Dealers' => $createdNetworkDealer,
             ], 201);
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
 
             return response()->json([$e]);
         }
@@ -64,7 +85,7 @@ class NetworkDealersController extends Controller
         $status = $status == 0 ? "Restored" : "Deleted";
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $network_dealer = NetworkDealers::findOrFail($id);
 
             if ($network_dealer != null) {
@@ -85,7 +106,7 @@ class NetworkDealersController extends Controller
                 "message" => "No Records Found",
             ]);
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             return response()->json([$e]);
         }
     }

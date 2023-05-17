@@ -12,7 +12,7 @@ class Equipment extends Model
     public $table = 'equipment';
 
     protected $fillable = [
-        'applicant_id',
+        'application_id',
         'equipment_name',
         'equipment_quantity',
         'review_comment',

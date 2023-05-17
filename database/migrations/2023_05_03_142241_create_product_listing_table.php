@@ -15,7 +15,7 @@ class CreateProductListingTable extends Migration
     {
         Schema::create('product_listing', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
+            $table->foreignId('application_id');
             $table->string('item_name');
             $table->string('item_brand');
             $table->string('description')->nullable();

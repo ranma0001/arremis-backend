@@ -15,7 +15,7 @@ class CreateEquipmentTable extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
+            $table->string('application_id');
             $table->string('equipment_name');
             $table->integer('equipment_quantity');
             $table->string('review_comment');

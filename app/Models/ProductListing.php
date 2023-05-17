@@ -12,7 +12,7 @@ class ProductListing extends Model
     public $table = 'product_listing';
 
     protected $fillable = [
-        'applicant_id',
+        'application_id',
         'item_name',
         'item_brand',
         'description',

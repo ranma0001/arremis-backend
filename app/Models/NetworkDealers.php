@@ -12,7 +12,7 @@ class NetworkDealers extends Model
     public $table = 'network_dealer';
 
     protected $fillable = [
-        'applicant_id',
+        'application_id',
         'company_name',
         'contact',
         'address',

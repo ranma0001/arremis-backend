@@ -15,7 +15,7 @@ class CreateServiceCentersTable extends Migration
     {
         Schema::create('service_center', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('applicant_id');
+            $table->foreignId('application_id');
             $table->string('center_name');
             $table->string('contact')->nullable();
             $table->string('email')->nullable();

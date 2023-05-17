@@ -16,7 +16,7 @@ class Controller extends BaseController
     {
         $q = $request->input('q', null);
 
-        $total = count(\DB::select($query->toSql(), $query->getBindings())); //$query->count();
+        $total = count(DB::select($query->toSql(), $query->getBindings())); //$query->count();
         $page = (int) request('page', 1);
         $take = (int) request('take', $total);
         $skip = ($page - 1) * $take;
@@ -89,7 +89,7 @@ class Controller extends BaseController
         }
 
         // pagination
-        $total = count(\DB::select($query->toSql(), $query->getBindings())); //$query->count();
+        $total = count(DB::select($query->toSql(), $query->getBindings())); //$query->count();
         $page = (int) request('page', 1);
         $take = (int) request('take', $total);
         $skip = ($page - 1) * $take;
