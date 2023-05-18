@@ -69,11 +69,6 @@ class EquipmentController extends Controller
             'equipments.*.application_id' => 'required|string',
             'equipments.*.equipment_name' => 'required|string|min:2|max:100',
             'equipments.*.equipment_quantity' => 'required|integer',
-            'equipments.*.image_string' => 'nullable|string',
-            'equipments.*.review_comment' => 'nullable|string',
-            'equipments.*.reviewed_by' => 'nullable|string',
-            'equipments.*.is_verified' => 'nullable|integer',
-            'equipments.*.review_level' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -106,10 +101,6 @@ class EquipmentController extends Controller
                     'application_id' => $equipmentData['application_id'],
                     'equipment_name' => $equipmentData['equipment_name'],
                     'equipment_quantity' => $equipmentData['equipment_quantity'],
-                    'review_comment' => $equipmentData['review_comment'],
-                    'reviewed_by' => $equipmentData['reviewed_by'],
-                    'is_verified' => $equipmentData['is_verified'],
-                    'review_level' => $equipmentData['review_level'],
                 ]);
 
                 $createdEquipment[] = $equipment;

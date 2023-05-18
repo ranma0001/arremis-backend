@@ -18,12 +18,10 @@ class CreateFacilitiesTable extends Migration
             $table->foreignId('application_id');
             $table->string('facility_name');
             $table->integer('facility_quantity');
-            $table->integer('status')->nullable();
-            $table->string('image_string')->nullable();
             $table->string('review_comment')->nullable();
-            $table->string('reviewed_by')->nullable();
-            $table->integer('is_verified')->nullable();
-            $table->integer('review_level')->nullable();
+            $table->integer('reviewed_by')->default('0');
+            $table->integer('status')->default('0');
+            $table->integer('review_level')->default('1');
             $table->integer('is_deleted')->default('0');
             $table->timestamps();
         });

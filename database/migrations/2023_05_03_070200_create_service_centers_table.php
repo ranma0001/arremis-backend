@@ -25,7 +25,7 @@ class CreateServiceCentersTable extends Migration
             $table->string('review_comment')->nullable();
             $table->string('reviewed_by')->nullable();
             $table->integer('is_verified')->default('0');
-            $table->integer('review_level')->default('0');
+            $table->integer('review_level')->default('1');
             $table->integer('is_deleted')->default('0');
             $table->timestamps();
         });

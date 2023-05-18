@@ -18,10 +18,10 @@ class CreateEquipmentTable extends Migration
             $table->string('application_id');
             $table->string('equipment_name');
             $table->integer('equipment_quantity');
-            $table->string('review_comment');
-            $table->string('reviewed_by');
-            $table->integer('is_verified');
-            $table->integer('review_level');
+            $table->string('review_comment')->nullable();
+            $table->integer('reviewed_by')->default('0');
+            $table->integer('status')->default('0');
+            $table->integer('review_level')->default('1');
             $table->integer('is_deleted')->default('0');
             $table->timestamps();
         });

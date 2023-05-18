@@ -15,7 +15,8 @@ class CreateApplicationsTable extends Migration
     public function up()
     {
         Schema::create('application', function (Blueprint $table) {
-            $table->increments('application_id');
+            $table->increments('id');
+            $table->string('application_id')->nullable();
             $table->string('pto_application_id')->nullable();
             $table->string('company_id')->nullable();
             $table->foreignId('applicant_id');
@@ -25,7 +26,7 @@ class CreateApplicationsTable extends Migration
             $table->string('application_remarks')->nullable();
             $table->integer('document_required')->nullable()->default(0);
             $table->date('transaction_date_time')->nullable();
-            $table->integer('document_on_site')->nullable()->default(0);
+            $table->integer('document_on_site')->nullable()->default(1);
             $table->integer('is_deleted')->nullable()->default(0);
             $table->json('classification')->nullable();
             $table->integer('status')->nullable();

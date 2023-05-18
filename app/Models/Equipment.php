@@ -17,7 +17,7 @@ class Equipment extends Model
         'equipment_quantity',
         'review_comment',
         'reviewed_by',
-        'is_verified',
+        'status',
         'review_level',
         'is_deleted'];
 }

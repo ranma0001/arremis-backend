@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applicant;
+use App\Models\ApplicantCompanyInfo;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -69,7 +72,7 @@ class JWTController extends Controller
             ], 401);
         }
 
-        return $this->respondWithToken($token, 1);
+        return $this->respondWithToken($token, auth()->user()->user_type);
     }
 
     public function logout()
@@ -91,17 +94,42 @@ class JWTController extends Controller
     // 1 with user return else 0
     protected function respondWithToken($token, $ret_type)
     {
-        if ($ret_type == 1) {
+
+        // USER TYPE
+        // 0 = Super Admin
+        // 1 = Applicant
+        // 2 = SRED Super Admin
+        if ($ret_type == 0) {
             return response()->json([
                 'token' => $token,
                 'token_type' => 'bearer',
-                'user' => auth()->user(),
                 'expires_in' => auth()->factory()->getTTL() * 60,
+            ]);
+
+        } else if ($ret_type == 1) {
+            $applicant = Applicant::query()
+                ->select('*')
+                ->where('id', auth()->user()->id)
+                ->where('is_deleted', 0)
+                ->first();
+            $applicant_company = ApplicantCompanyInfo::query()
+                ->select(DB::raw('id as company_id'), 'company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type')
+                ->where('applicant_id', $applicant->id)
+                ->first();
+
+            return response()->json([
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+                'user' => auth()->user(),
+                'info' => $applicant,
+                'company' => $applicant_company,
             ]);
         } else {
             return response()->json([
                 'token' => $token,
                 'token_type' => 'bearer',
+                'user' => auth()->user(),
                 'expires_in' => auth()->factory()->getTTL() * 60,
             ]);
         }
