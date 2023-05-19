@@ -17,7 +17,6 @@ class CreateApplicationsTable extends Migration
         Schema::create('application', function (Blueprint $table) {
             $table->increments('id');
             $table->string('application_id')->nullable();
-            $table->string('pto_application_id')->nullable();
             $table->string('company_id')->nullable();
             $table->foreignId('applicant_id');
             $table->string('application_type')->nullable();

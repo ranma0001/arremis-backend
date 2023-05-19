@@ -16,21 +16,22 @@ class ProductListing extends Model
         'item_name',
         'item_brand',
         'description',
-        'manufacturer',
-        'fabricator',
-        'assembler',
-        'distributor',
-        'dealer',
-        'exporter',
+        'classification',
         'cc_no',
         'country_manufacturer',
-        'image_string',
         'inspected',
         'review_comment',
         'reviewed_by',
-        'is_verified',
+        'status',
         'review_level',
+        'file_location',
+        'file_name',
+        'file_type',
         'is_deleted',
+    ];
+
+    protected $casts = [
+        'classification' => 'array',
     ];
 
 }

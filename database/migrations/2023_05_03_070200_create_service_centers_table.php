@@ -18,13 +18,13 @@ class CreateServiceCentersTable extends Migration
             $table->foreignId('application_id');
             $table->string('center_name');
             $table->string('contact')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email_address')->nullable();
             $table->double('longitude')->nullable();
             $table->double('latitude')->nullable();
             $table->string('address')->nullable();
             $table->string('review_comment')->nullable();
-            $table->string('reviewed_by')->nullable();
-            $table->integer('is_verified')->default('0');
+            $table->integer('reviewed_by')->nullable();
+            $table->integer('status')->default('0');
             $table->integer('review_level')->default('1');
             $table->integer('is_deleted')->default('0');
             $table->timestamps();

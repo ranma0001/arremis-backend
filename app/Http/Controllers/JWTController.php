@@ -9,6 +9,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
 class JWTController extends Controller
@@ -28,8 +29,6 @@ class JWTController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
             'password_confirmation' => 'min:6|required_with:password|same:password',
-            'user_type' => 'required|integer',
-            'status' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -43,8 +42,6 @@ class JWTController extends Controller
             'extensionname' => $request->extensionname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'user_type' => $request->user_type,
-            'status' => $request->status,
         ]);
 
         return response()->json([
@@ -99,6 +96,7 @@ class JWTController extends Controller
         // 0 = Super Admin
         // 1 = Applicant
         // 2 = SRED Super Admin
+
         if ($ret_type == 0) {
             return response()->json([
                 'token' => $token,
@@ -109,16 +107,23 @@ class JWTController extends Controller
         } else if ($ret_type == 1) {
             $applicant = Applicant::query()
                 ->select('*')
-                ->where('id', auth()->user()->id)
+                ->where('user_id', auth()->user()->id)
                 ->where('is_deleted', 0)
                 ->first();
+
             $applicant_company = ApplicantCompanyInfo::query()
                 ->select(DB::raw('id as company_id'), 'company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type')
                 ->where('applicant_id', $applicant->id)
                 ->first();
 
+            $user = auth()->user();
+            $token1 = JWTAuth::customClaims([
+                'company_id' => $applicant_company->company_id,
+                'applicant_id' => $applicant->id,
+            ])->fromUser($user);
+
             return response()->json([
-                'token' => $token,
+                'token' => $token1,
                 'token_type' => 'bearer',
                 'expires_in' => auth()->factory()->getTTL() * 60,
                 'user' => auth()->user(),

@@ -18,7 +18,8 @@ class NetworkDealers extends Model
         'address',
         'review_comment',
         'reviewed_by',
-        'is_verified',
+        'status',
+        'email_address',
         'review_level',
         'is_deleted',
     ];

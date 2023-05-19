@@ -19,10 +19,11 @@ class CreateNetworkDealersTable extends Migration
             $table->string('company_name');
             $table->string('contact');
             $table->string('address');
-            $table->string('review_comment');
-            $table->string('reviewed_by');
-            $table->integer('is_verified');
-            $table->integer('review_level');
+            $table->string('email_address');
+            $table->string('review_comment')->nullable();
+            $table->integer('reviewed_by')->default('0');
+            $table->integer('status')->default('0');
+            $table->integer('review_level')->default('1');
             $table->integer('is_deleted')->default('0');
             $table->timestamps();
         });
