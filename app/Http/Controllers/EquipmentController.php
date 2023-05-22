@@ -17,50 +17,6 @@ class EquipmentController extends Controller
         $this->middleware('custom.jwt');
     }
 
-    // public function create_equipment(Request $request)
-    // {
-
-    //     $validator = Validator::make($request->all(), [
-    //         //APPLICANT VALIDATION
-    //         'application_id' => 'required|string',
-    //         'equipment_name' => 'required|string|min:2|max:100',
-    //         'equipment_quantity' => 'required|integer',
-    //         'image_string' => 'nullable|string',
-    //         'review_comment' => 'nullable|string',
-    //         'reviewed_by' => 'nullable|string',
-    //         'is_verified' => 'nullable|integer',
-    //         'review_level' => 'nullable|integer',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->errors(), 400);
-    //     }
-
-    //     try {
-
-    //         DB::beginTransaction();
-    //         $equipment = Equipment::create([
-    //             'application_id' => $request->application_id,
-    //             'equipment_name' => $request->equipment_name,
-    //             'equipment_quantity' => $request->equipment_quantity,
-    //             'review_comment' => $request->review_comment,
-    //             'reviewed_by' => $request->reviewed_by,
-    //             'is_verified' => $request->is_verified,
-    //             'review_level' => $request->review_level,
-    //         ]);
-
-    //         DB::commit();
-    //         return response()->json([
-    //             'message' => 'Equipment created successfully.',
-    //             'equipment' => $equipment,
-    //         ], 201);
-
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-
-    //         return response()->json([$e]);
-    //     }
-    // }
 
     public function create_equipment(Request $request)
     {

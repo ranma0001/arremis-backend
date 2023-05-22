@@ -47,6 +47,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     //Application
     Route::post('application', [ApplicationController::class, 'create_application']);
+    Route::put('application', [ApplicationController::class, 'update_application']);
     Route::get('applications', [ApplicationController::class, 'list_application_with_data']);
 
     //Facility

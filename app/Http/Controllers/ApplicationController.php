@@ -26,9 +26,9 @@ class ApplicationController extends Controller
     {
 
         $tables = ['equipment', 'facility', 'network_dealer', 'service_center', 'product_listing'];
-
         $token = JWTAuth::parseToken();
         $payload = $token->getPayload();
+        $applicant_id_ = $payload->get('applicant_id');
 
         $validator = $this->validateInput($request);
 
@@ -37,11 +37,12 @@ class ApplicationController extends Controller
         }
 
         try {
-
+            DB::beginTransaction();
             $application = Application::create([
-                'applicant_id' => $payload->get('applicant_id'),
+                'applicant_id' => $applicant_id_,
                 'company_id' => $payload->get('company_id'),
                 'application_type' => $request->application_type,
+                'application_status' => $request->input('application_status'),
             ]);
 
             foreach ($tables as $tablesData) {
@@ -148,6 +149,36 @@ class ApplicationController extends Controller
 
     public function update_application(Request $request)
     {
+        $tables = ['equipment', 'facility', 'network_dealer', 'service_center', 'product_listing'];
+
+        $token = JWTAuth::parseToken();
+        $payload = $token->getPayload();
+        $applicant_id_ = $payload->get('applicant_id');
+
+        $validator = $this->validateInput($request);
+
+        if ($validator != null) {
+            return $validator;
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $application = Application::where('applicant_id', $applicant_id_)->first();
+            $equipment = Equipment::where('application_id', $application->id)->get();
+            return $equipment;
+
+            if ($application != null) {
+                $application->update([
+                    'is_deleted' => $request->is_deleted,
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()]);
+        }
 
     }
 
@@ -168,34 +199,32 @@ class ApplicationController extends Controller
 
     private function validateInput(Request $request)
     {
-        $validator = Validator::make($request->all(), [
 
-            // //APPLICANT VALIDATION
+        $validator = Validator::make($request->all(), [
+            // //Facility VALIDATION
             'facilities.*.facility_name' => 'required|string|min:2|max:100',
             'facilities.*.facility_quantity' => 'required|integer',
-
+            //Equipment VALIDATION
             'equipments.*.equipment_name' => 'required|string|min:2|max:100',
             'equipments.*.equipment_quantity' => 'required|integer',
-
+            //Network VALIDATION
             'network_dealers.*.company_name' => 'required|string|min:2|max:100',
             'network_dealers.*.address' => 'required|string|min:2|max:100',
             'network_dealers.*.contact' => 'required|string|min:2|max:100',
             'network_dealers.*.email_address' => 'required|string|email|max:100',
-
+            //Service Center VALIDATION
             'service_centers.*.center_name' => 'required|string|min:2|max:100',
             'service_centers.*.address' => 'required|string|min:2|max:100',
             'service_centers.*.contact' => 'required|string|min:2|max:100',
             'service_centers.*.email_address' => 'required|string|email|max:100',
-
+            //Product Listing VALIDATION
             'product_listings.*.item_name' => 'required|string|min:2|max:100',
             'product_listings.*.item_brand' => 'required|string|min:2|max:100',
             'product_listings.*.description' => 'string|min:2|max:100',
             'product_listings.*.classification' => 'min:2|max:100',
-
         ]);
 
         $validator->setAttributeNames([
-
             'facilities.*.application_id' => 'Application ID',
             'facilities.*.facility_name' => 'Facility Name',
             'facilities.*.facility_quantity' => 'Quantity',
