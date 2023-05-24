@@ -8,6 +8,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\NetworkDealersController;
 use App\Http\Controllers\ProductListingController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ServiceCenterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -81,5 +82,12 @@ Route::group(['middleware' => 'api'], function ($router) {
     #### File Upload Response
     Route::post('/file', [FileController::class, 'upload_file']);
     Route::get('/file', [FileController::class, 'read_file']);
+
+    ##email reset password
+    Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.reset');
+    Route::get('password/email', [ResetPasswordController::class, 'getToken'])->name('reset-password');
+
+    // Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+    // Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
 });
