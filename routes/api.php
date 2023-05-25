@@ -6,6 +6,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\JWTController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NetworkDealersController;
 use App\Http\Controllers\ProductListingController;
 use App\Http\Controllers\ResetPasswordController;
@@ -86,5 +87,10 @@ Route::group(['middleware' => 'api'], function ($router) {
     ##email reset password
     Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.reset');
     Route::get('password/email', [ResetPasswordController::class, 'changePassword'])->name('reset-password');
+
+    ##Location
+    Route::get('/location/region', [LocationController::class, 'getRegion']);
+    Route::get('/location/province', [LocationController::class, 'getProvince']);
+    Route::get('/location/municipality', [LocationController::class, 'getMunicipality']);
 
 });
