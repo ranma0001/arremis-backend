@@ -46,7 +46,7 @@
                                         <span
                                             style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                                            Please use the below password to log in your account. And update the password once you logged in
+                                        Please use the password below to log into your account, and remember to update your password once you have logged in.
                                         </p>
                                         <h1>{{$data}}</h1>
                                         <a href="https://www.youtube.com"

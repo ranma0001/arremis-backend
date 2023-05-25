@@ -85,9 +85,6 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     ##email reset password
     Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.reset');
-    Route::get('password/email', [ResetPasswordController::class, 'getToken'])->name('reset-password');
-
-    // Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-    // Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('password/email', [ResetPasswordController::class, 'changePassword'])->name('reset-password');
 
 });

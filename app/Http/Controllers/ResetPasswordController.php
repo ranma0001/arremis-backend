@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\helper\EmailSender;
 use App\Models\PasswordReset;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
@@ -42,14 +44,14 @@ class ResetPasswordController extends Controller
         return Password::broker();
     }
 
-    public function getToken(Request $request)
+    public function changePassword(Request $request)
     {
         $token = $request->input('token');
         $email = $request->input('email');
         $passwordReset = PasswordReset::where('email', $email)->first();
 
         if (!$passwordReset) {
-            return 1;
+            return view('token-expired');
         }
 
         if (Hash::check($token, $passwordReset->token)) {
@@ -59,36 +61,19 @@ class ResetPasswordController extends Controller
             $generatedPassword = trim(str_replace('Generated Password:', '', $output));
             EmailSender::sendEmail($email, 'New Password Sent', $generatedPassword);
 
-            //put update password here
-            //put delete token here
+            $user = User::where('email', $email)->first();
+            if ($user != null) {
+                $user->update([
+                    'password' => Hash::make($generatedPassword),
+                ]);
 
-            return view('reset-password');
-        } else {
-            // Token is invalid
-            return 3;
-        }
+                DB::table('password_resets')->where('email', $email)->delete();
 
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $response = $this->broker()->reset(
-            $request->only('email', 'password', 'password_confirmation'),
-            function ($user, $password) {
-                $user->password = bcrypt($password);
-                $user->save();
+                return view('reset-password');
+            } else {
+                return view('token-expired');
             }
-        );
 
-        if ($response == Password::PASSWORD_RESET) {
-            return response()->json(['message' => 'Password has been updated.'], 200);
-        } else {
-            return response()->json(['error' => 'Unable to update password.'], 400);
         }
     }
 
