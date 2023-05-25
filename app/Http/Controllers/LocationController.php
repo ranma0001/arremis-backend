@@ -20,24 +20,49 @@ class LocationController extends Controller
     public function getProvince(Request $request)
     {
 
-        $locations = Location::select('id', 'province')
-            ->groupBy()
+        $locations = Location::select('province')
+            ->groupBy('province')
             ->where('region', $request->region)
             ->get();
 
         return response()->json([
-            'region' => $locations,
+            'province' => $locations,
         ], 201);
 
     }
 
-    public function getMunicipality()
+    public function getMunicipality(Request $request)
     {
 
-        $location = Location::select('id', 'reg')->distinct()->get();
+        $locations = Location::select('municipality')
+            ->groupBy('municipality')
+            ->groupBy('province')
+            ->where('region', $request->region)
+            ->where('province', $request->province)
+            ->get();
+
         return response()->json([
-            'region' => $location,
+            'municipality' => $locations,
         ], 201);
 
     }
+
+    public function getBarangay(Request $request)
+    {
+
+        $locations = Location::select('barangay')
+            ->groupBy('barangay')
+            ->groupBy('municipality')
+            ->groupBy('province')
+            ->where('region', $request->region)
+            ->where('province', $request->province)
+            ->where('municipality', $request->municipality)
+            ->get();
+
+        return response()->json([
+            'barangay' => $locations,
+        ], 201);
+
+    }
+
 }

@@ -92,5 +92,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/location/region', [LocationController::class, 'getRegion']);
     Route::get('/location/province', [LocationController::class, 'getProvince']);
     Route::get('/location/municipality', [LocationController::class, 'getMunicipality']);
+    Route::get('/location/barangay', [LocationController::class, 'getBarangay']);
 
 });
