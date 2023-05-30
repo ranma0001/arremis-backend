@@ -24,9 +24,7 @@
                     </tr>
                     <tr>
                         <td style="text-align:center;">
-                          <a href="https://www.youtube.com" title="logo" target="_blank">
-                            <a href=""><img src="https://i.ibb.co/Fnk56xS/logo.png" alt="logo" border="0"></a>
-                          </a>
+                        <a href="https://www.youtube.com"><img src="https://i.ibb.co/gJYZTMH/arremis-with-da-4.png" alt="arremis-with-da" border="0"></a>
                         </td>
                     </tr>
                     <tr>
@@ -41,17 +39,15 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0 35px;">
-                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
-                                            requested to reset your password</h1>
+                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">Your Account is Approved</h1>
                                         <span
                                             style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                                        Please use the password below to log into your account, and remember to update your password once you have logged in.
+                                        Congratulations! Your account has been approved and is now ready to use.
                                         </p>
-                                        <h1>{{$data}}</h1>
+
                                         <a href="https://www.youtube.com"
-                                            style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
-                                            Password</a>
+                                            style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">VISIT ARREMIS</a>
                                     </td>
                                 </tr>
                                 <tr>

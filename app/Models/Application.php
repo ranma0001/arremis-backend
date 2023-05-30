@@ -26,6 +26,9 @@ class Application extends Model
         'is_deleted',
         'classification',
         'status',
+        'last_reviewer_assigned',
+        'reviewer_assigned',
+
     ];
 
     protected $casts = [

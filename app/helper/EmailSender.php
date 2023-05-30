@@ -17,4 +17,15 @@ class EmailSender
                 ->subject($subject);
         });
     }
+
+    public static function sendNotif($recipientEmail, $subject, $blade_name)
+    {
+        $message2 = view($blade_name)->render();
+        Mail::html($message2, function ($email) use ($recipientEmail, $subject) {
+            $email->from('arrarralcantara@gmail.com', 'ARREMIS ADMIN')
+                ->to($recipientEmail)
+                ->subject($subject);
+        });
+
+    }
 }

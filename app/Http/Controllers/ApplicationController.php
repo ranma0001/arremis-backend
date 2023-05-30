@@ -681,4 +681,51 @@ class ApplicationController extends Controller
         return response()->json($results);
     }
 
+    public function update_status(Request $request)
+    {
+        $app_status = $request->application_status;
+        $status = '';
+        if ($app_status == 1) {
+            $status = 'For-Review';
+        } else if ($app_status == 2) {
+            $status = 'For-Validation';
+        } else if ($app_status == 3) {
+            $status = 'For-Endorsement';
+        } else if ($app_status == 4) {
+            $status = 'For-Recommendation';
+        } else {
+            $status = 'Proceeded Inspection';
+        }
+
+        try {
+            DB::beginTransaction();
+            $application = Application::findOrFail($request->id);
+            $last_reviewer = $application->reviewer_assigned;
+            if ($application != null) {
+                $application->update([
+                    'application_status' => $request->application_status,
+                    'reviewer_assigned' => 2,
+                    'last_reviewer_assigned' => 100,
+                ]);
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Applicant  " . $status . " Successfully",
+                    'application' => $application,
+                ], 200);
+            }
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 400,
+                "result" => 'error',
+                "message" => "No Records Found",
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
 }

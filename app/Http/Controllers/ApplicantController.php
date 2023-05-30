@@ -129,7 +129,6 @@ class ApplicantController extends Controller
                 'applicant_lastname' => $applicant_data['applicant_lastname'],
                 'applicant_extensionname' => $applicant_data['applicant_extensionname'],
                 'designation' => $applicant_data['designation'],
-                'profile_picture' => $applicant_data['profile_picture'],
             ]);
 
             $user->update([
@@ -259,7 +258,6 @@ class ApplicantController extends Controller
             'applicant_lastname' => 'nullable|string|min:1|max:100',
             'applicant_extensionname' => 'nullable|string',
             'designation' => 'nullable|string',
-            'profile_picture' => 'nullable|string',
         ]);
 
         $validator_company = Validator::make($request->input('company_info'), [

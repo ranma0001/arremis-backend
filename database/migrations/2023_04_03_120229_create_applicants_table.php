@@ -21,7 +21,6 @@ class CreateApplicantsTable extends Migration
             $table->string('applicant_lastname');
             $table->string('applicant_extensionname')->nullable();
             $table->string('designation')->nullable();
-            $table->string('profile_picture')->nullable();
             $table->string('is_deleted')->default('0');
             $table->timestamps();
         });

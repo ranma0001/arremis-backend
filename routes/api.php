@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EquipmentController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\NetworkDealersController;
 use App\Http\Controllers\ProductListingController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ServiceCenterController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +54,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::put('application', [ApplicationController::class, 'update_application']);
     Route::get('applications', [ApplicationController::class, 'list_application_with_data']);
     Route::get('application', [ApplicationController::class, 'list_application_for_card']);
+    Route::put('application/status/{id}', [ApplicationController::class, 'update_status']);
 
     //Facility
     Route::post('facility', [FacilityController::class, 'create_facility']);
@@ -93,5 +96,11 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/location/province', [LocationController::class, 'getProvince']);
     Route::get('/location/municipality', [LocationController::class, 'getMunicipality']);
     Route::get('/location/barangay', [LocationController::class, 'getBarangay']);
+
+    ##Account Management
+    Route::post('/account/update/{id}', [AccountController::class, 'updateAccount']);
+
+    ##User Management
+    Route::post('/user_management/approval/{id}', [UserManagementController::class, 'accountApproval']);
 
 });

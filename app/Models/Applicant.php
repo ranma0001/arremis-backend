@@ -20,7 +20,6 @@ class Applicant extends Model
         'applicant_lastname',
         'applicant_extensionname',
         'designation',
-        'profile_picture',
         'is_deleted',
         'user_id',
     ];

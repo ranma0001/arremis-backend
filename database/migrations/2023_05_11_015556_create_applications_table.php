@@ -18,9 +18,11 @@ class CreateApplicationsTable extends Migration
             $table->increments('id');
             $table->string('application_id')->nullable();
             $table->string('company_id')->nullable();
-            $table->foreignId('applicant_id');
+            $table->foreignId('applicant_id')->nullable();
             $table->string('application_type')->nullable();
-            $table->string('application_status')->nullable();
+            $table->string('application_status')->nullable()->default(0);
+            $table->integer('reviewer_assigned')->nullable()->default(0);
+            $table->integer('last_reviewer_assigned')->nullable()->default(0);
             $table->date('application_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('application_remarks')->nullable();
             $table->integer('document_required')->nullable()->default(0);
