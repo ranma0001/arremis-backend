@@ -24,6 +24,16 @@ class Applicant extends Model
         'user_id',
     ];
 
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        return $this->applicant_firstname . ' ' .
+        $this->applicant_middlename . ' ' .
+        $this->applicant_lastname . ' ' .
+            ($this->applicant_extensionname == 'NA' ? '' : ($this->applicant_extensionname ?? ''));
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

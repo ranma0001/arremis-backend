@@ -241,10 +241,7 @@ class ApplicantController extends Controller
         $JSON_FIELDS = [];
         $BOOL_FIELDS = [];
         $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
-        return response()->json([
-            'applicant' => $response,
-
-        ]);
+        return response()->json($response);
 
     }
 
