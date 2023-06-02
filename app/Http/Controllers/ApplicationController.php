@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\helper\EmailSender;
 use App\Http\Controllers\Controller;
+use App\Models\ApplicantCompanyInfo;
 use App\Models\Application;
 use App\Models\Equipment;
 use App\Models\Facility;
 use App\Models\NetworkDealers;
 use App\Models\ProductListing;
 use App\Models\ServiceCenter;
+use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -683,39 +687,28 @@ class ApplicationController extends Controller
 
     public function update_status(Request $request)
     {
-        $app_status = $request->application_status;
-        $status = '';
-        if ($app_status == 1) {
-            $status = 'For-Review';
-        } else if ($app_status == 2) {
-            $status = 'For-Validation';
-        } else if ($app_status == 3) {
-            $status = 'For-Endorsement';
-        } else if ($app_status == 4) {
-            $status = 'For-Recommendation';
-        } else {
-            $status = 'Proceeded Inspection';
-        }
-
         try {
             DB::beginTransaction();
+
+            $admin = User::findOrFail($request->reviewer);
             $application = Application::findOrFail($request->id);
+            $company = ApplicantCompanyInfo::findOrFail($application->company_id);
+
             $last_reviewer = $application->reviewer_assigned;
-            if ($application != null) {
-                $application->update([
-                    'application_status' => $request->application_status,
-                    'reviewer_assigned' => 2,
-                    'last_reviewer_assigned' => 100,
-                ]);
 
-                DB::commit();
+            $status = $this->getApplicationStatus($request->application_status);
 
-                return response()->json([
-                    'status' => 200,
-                    'message' => "Applicant  " . $status . " Successfully",
-                    'application' => $application,
-                ], 200);
-            }
+            $this->updateApplicationStatus($application, $request->application_status, $request->reviewer, $last_reviewer);
+            $this->sendNotificationToApplicant($application);
+            $this->sendNotificationToReviewer($admin, $company, $status);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'message' => "Application is now $status",
+                'application' => $application,
+            ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 "code" => 400,
@@ -726,6 +719,55 @@ class ApplicationController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()]);
         }
+    }
+
+    private function getApplicationStatus(int $appStatus): string
+    {
+        switch ($appStatus) {
+            case 1:
+                return 'For-Review';
+            case 2:
+                return 'For-Validation';
+            case 3:
+                return 'For-Endorsement';
+            case 4:
+                return 'For-Recommendation';
+            default:
+                return 'For Inspection';
+        }
+    }
+
+    private function updateApplicationStatus(Application $application, int $appStatus, int $reviewer, int $lastReviewer): void
+    {
+        $application->update([
+            'application_status' => $appStatus,
+            'reviewer_assigned' => $reviewer,
+            'last_reviewer_assigned' => $lastReviewer,
+        ]);
+    }
+
+    private function sendNotificationToApplicant(Application $application): void
+    {
+        $account = User::findOrFail($application->applicant_id);
+        EmailSender::sendNotif($account->email, 'Application is now for Review', 'email-application-status-applicant');
+    }
+
+    private function sendNotificationToReviewer(User $admin, ApplicantCompanyInfo $company, string $status): void
+    {
+        $data = [
+            'reviewer' => $admin->firstname,
+            'company_name' => $company->company_name,
+            'application_stage' => $status,
+            'assigned_date' => Carbon::now()->toDateString(),
+        ];
+
+        // List of CC recipients
+        $emailAddresses = [
+            "ranrayalcantara@gmail.com",
+            "arrarralcantara@gmail.com",
+        ];
+
+        EmailSender::sendNotifWithCC($admin->email, $emailAddresses, 'Application assigned to you', 'email-assigned-application', $data);
     }
 
 }

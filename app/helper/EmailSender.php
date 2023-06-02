@@ -28,4 +28,17 @@ class EmailSender
         });
 
     }
+
+    public static function sendNotifWithCC($recipientEmail, $ccEmails, $subject, $blade_name, $data)
+    {
+        $message2 = view($blade_name, compact('data'))->render();
+        Mail::send([], [], function ($email) use ($recipientEmail, $subject, $ccEmails, $message2) {
+            $email->from('arrarralcantara@gmail.com', 'ARREMIS ADMIN')
+                ->to($recipientEmail)
+                ->cc($ccEmails)
+                ->subject($subject)
+                ->setBody($message2, 'text/html');
+        });
+    }
+
 }

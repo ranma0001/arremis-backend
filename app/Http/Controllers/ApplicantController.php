@@ -241,8 +241,12 @@ class ApplicantController extends Controller
         $JSON_FIELDS = [];
         $BOOL_FIELDS = [];
         $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
-        return response()->json($response);
 
+        foreach ($response as &$record) {
+            $record['classification'] = json_decode($record['classification'], true);
+        }
+
+        return response()->json($response);
     }
 
     private function validateInput(Request $request, $isCreate)

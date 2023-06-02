@@ -9,6 +9,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NetworkDealersController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProductListingController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ServiceCenterController;
@@ -102,5 +103,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     ##User Management
     Route::post('/user_management/approval/{id}', [UserManagementController::class, 'accountApproval']);
+
+    ##Generate PDF
+    Route::get('/generate-pdf', [PdfController::class, 'generatePDF']);
 
 });

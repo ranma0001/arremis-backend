@@ -130,7 +130,7 @@ class Controller extends BaseController
                 return $item;
             });
         }
-
+        return $data;
         return array(
             'filters' => $filters,
             'sort_dir' => $sort_dir === 'desc' ? 'descend' : 'ascend',

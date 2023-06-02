@@ -55,26 +55,46 @@ class ResetPasswordController extends Controller
         }
 
         if (Hash::check($token, $passwordReset->token)) {
+            $newPassword = $this->generateNewPassword();
 
-            $password = Artisan::call('password:generate');
-            $output = Artisan::output();
-            $generatedPassword = trim(str_replace('Generated Password:', '', $output));
-            EmailSender::sendEmail($email, 'New Password Sent', $generatedPassword);
+            $this->sendNewPasswordEmail($email, $newPassword);
 
-            $user = User::where('email', $email)->first();
-            if ($user != null) {
-                $user->update([
-                    'password' => Hash::make($generatedPassword),
-                ]);
+            $this->updateUserPassword($email, $newPassword);
 
-                DB::table('password_resets')->where('email', $email)->delete();
+            $this->deletePasswordResetRecord($email);
 
-                return view('reset-password');
-            } else {
-                return view('token-expired');
-            }
-
+            return view('reset-password');
+        } else {
+            return view('token-expired');
         }
+    }
+
+    protected function sendNewPasswordEmail($email, $newPassword)
+    {
+        EmailSender::sendEmail($email, 'New Password Sent', $newPassword);
+    }
+    protected function generateNewPassword()
+    {
+        $password = Artisan::call('password:generate');
+        $output = Artisan::output();
+        $generatedPassword = trim(str_replace('Generated Password:', '', $output));
+
+        return $generatedPassword;
+    }
+    protected function updateUserPassword($email, $newPassword)
+    {
+        $user = User::where('email', $email)->first();
+
+        if ($user != null) {
+            $user->update([
+                'password' => Hash::make($newPassword),
+            ]);
+        }
+    }
+
+    protected function deletePasswordResetRecord($email)
+    {
+        DB::table('password_resets')->where('email', $email)->delete();
     }
 
 }

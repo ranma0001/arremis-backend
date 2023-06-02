@@ -89,55 +89,85 @@ class JWTController extends Controller
         return response()->json(auth()->user());
     }
 
-    // 1 with user return else 0
     protected function respondWithToken($token, $ret_type)
     {
-
-        // USER TYPE
-        // 0 = Super Admin
-        // 1 = Applicant
-        // 2 = SRED Super Admin
-
         if ($ret_type == 0) {
+            return $this->respondWithTokenForSuperAdmin($token);
+        } elseif ($ret_type == 1) {
+            return $this->respondWithTokenForApplicant($token);
+        } else {
+            return $this->respondWithTokenForOther($token);
+        }
+    }
+
+    protected function respondWithTokenForSuperAdmin($token)
+    {
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+        ]);
+    }
+
+    protected function respondWithTokenForApplicant($token)
+    {
+        $user = auth()->user();
+
+        if ($user->status == 1) {
             return response()->json([
-                'token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60,
+                "status" => 400,
+                "error" => "Account Pending Approval",
+                "message" => "Your account is currently awaiting approval. Please wait for the account to be reviewed and approved by the administrator.",
             ]);
-
-        } else if ($ret_type == 1) {
-            $applicant = Applicant::query()
-                ->select('*')
-                ->where('user_id', auth()->user()->id)
-                ->where('is_deleted', 0)
-                ->first();
-
-            $applicant_company = ApplicantCompanyInfo::query()
-                ->select(DB::raw('id as company_id'), 'company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type')
-                ->where('applicant_id', $applicant->id)
-                ->first();
-
-            $user = auth()->user();
-            $token1 = JWTAuth::customClaims([
-                'company_id' => $applicant_company->company_id,
-                'applicant_id' => $applicant->id,
-            ])->fromUser($user);
-
-            return response()->json([
-                'token' => $token1,
-                'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60,
-                'user' => auth()->user(),
-                'info' => $applicant,
-                'company' => $applicant_company,
-            ]);
+        } elseif ($user->status == 2) {
+            return $this->generateTokenForApplicant($token);
         } else {
             return response()->json([
-                'token' => $token,
-                'token_type' => 'bearer',
-                'user' => auth()->user(),
-                'expires_in' => auth()->factory()->getTTL() * 60,
+                "status" => 400,
+                "error" => "Account Frozen",
+                "message" => "Your account has been temporarily frozen. Please contact our support team for further assistance.",
             ]);
         }
     }
+
+    protected function generateTokenForApplicant($token)
+    {
+        $applicant = Applicant::query()
+            ->select('*')
+            ->where('user_id', auth()->user()->id)
+            ->where('is_deleted', 0)
+            ->first();
+
+        $applicant_company = ApplicantCompanyInfo::query()
+            ->select(DB::raw('id as company_id'), 'company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type')
+            ->where('applicant_id', $applicant->id)
+            ->first();
+
+        $user = auth()->user();
+
+        $token1 = JWTAuth::customClaims([
+            'company_id' => $applicant_company->company_id,
+            'applicant_id' => $applicant->id,
+        ])->fromUser($user);
+
+        return response()->json([
+            'token' => $token1,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user(),
+            'info' => $applicant,
+            'company' => $applicant_company,
+        ]);
+    }
+
+    protected function respondWithTokenForOther($token)
+    {
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'bearer',
+            'user' => auth()->user(),
+            'expires_in' => auth()->factory()->getTTL() * 60,
+        ]);
+    }
+
 }
