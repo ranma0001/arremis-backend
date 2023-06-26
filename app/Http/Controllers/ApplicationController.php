@@ -133,6 +133,8 @@ class ApplicationController extends Controller
                     'description' => $productListingData['description'],
                     'country_manufacturer' => $productListingData['country_manufacturer'],
                     'classification' => $productListingData['classification'],
+                    'certificate_distributorship' => $productListingData['certificate_distributorship'],
+                    'certificate_country_manufacturer' => $productListingData['certificate_country_manufacturer'],
                 ]);
 
                 $createdProductListing[] = $product_listing;
@@ -247,6 +249,8 @@ class ApplicationController extends Controller
                         'description' => $productListingData['description'],
                         'country_manufacturer' => $productListingData['country_manufacturer'],
                         'classification' => $productListingData['classification'],
+                        // 'certificate_distributorship' => $productListingData['certificate_distributorship'],
+                        // 'certificate_country_manufacturer' => $productListingData['certificate_country_manufacturer'],
                     ]);
 
                     $createdProductListing[] = $product_listing;

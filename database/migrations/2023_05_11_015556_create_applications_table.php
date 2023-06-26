@@ -30,7 +30,7 @@ class CreateApplicationsTable extends Migration
             $table->integer('document_on_site')->nullable()->default(1);
             $table->integer('is_deleted')->nullable()->default(0);
             $table->json('classification')->nullable();
-            $table->integer('status')->nullable()->default(1);
+            $table->integer('status')->nullable()->default(0);
             $table->timestamps();
         });
     }

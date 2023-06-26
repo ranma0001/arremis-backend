@@ -28,6 +28,8 @@ class ProductListing extends Model
         'file_name',
         'file_type',
         'is_deleted',
+        'certificate_distributorship',
+        'certificate_country_manufacturer',
     ];
 
     protected $casts = [

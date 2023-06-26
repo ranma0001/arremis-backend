@@ -121,12 +121,10 @@ class FacilityController extends Controller
 
     public function show(Request $request, $id)
     {
-        //$facilityName = $request->input('facilityName');
-
         $facility = Facility::query()
             ->select('application_id', 'application_id', 'facility_name', 'facility_quantity',
-                DB::raw('fn_facility_status(status) as status'), 'image_string', 'review_comment',
-                'reviewed_by', 'is_verified', 'review_level', 'is_deleted')
+                DB::raw('fn_facility_status(status) as status'), 'review_comment',
+                'reviewed_by', 'review_level', 'is_deleted')
             ->where('id', $id)
             ->first();
 
