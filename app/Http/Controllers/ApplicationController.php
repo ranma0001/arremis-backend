@@ -26,6 +26,9 @@ class ApplicationController extends Controller
     {
         $this->middleware('custom.jwt');
     }
+
+    //save and also save as draft
+    //application status = 1 save 2 = draft
     public function create_application(Request $request)
     {
 

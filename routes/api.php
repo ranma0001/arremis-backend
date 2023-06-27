@@ -110,4 +110,5 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     ##Admin PTO List of table
     Route::get('list/submission', [AdminController::class, 'submissionList']);
+    Route::get('list/review', [AdminController::class, 'reviewList']);
 });
