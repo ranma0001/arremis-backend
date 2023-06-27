@@ -96,7 +96,7 @@ class Controller extends BaseController
         $query = $query->skip($skip)->take($take);
 
         // sorting
-        $sort_key = request('sort_key', 'id', 'created_at', 'updated_at', 'last_name', 'total', 'start_date', 'file_name', 'file_date', 'name', 'email', 'created_by', 'company_name', 'applicant_firstname', 'user_id', 'item_name');
+        $sort_key = request('sort_key', 'created_at', 'id', 'updated_at', 'last_name', 'total', 'start_date', 'file_name', 'file_date', 'name', 'email', 'created_by', 'company_name', 'applicant_firstname', 'user_id', 'item_name');
         $sort_dir = request('sort_dir', 'descend') == 'descend' ? 'desc' : 'asc';
         if (is_array($sort_key)) {
             foreach ($sort_key as $item) {
@@ -130,7 +130,7 @@ class Controller extends BaseController
                 return $item;
             });
         }
-        return $data;
+
         return array(
             'filters' => $filters,
             'sort_dir' => $sort_dir === 'desc' ? 'descend' : 'ascend',
