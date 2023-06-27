@@ -22,6 +22,8 @@ class CreateProductListingTable extends Migration
             $table->json('classification')->nullable();
             $table->string('cc_no')->nullable();
             $table->string('country_manufacturer')->nullable();
+            $table->string('certificate_distributorship')->nullable();
+            $table->string('certificate_country_manufacturer')->nullable();
             $table->integer('inspected')->default('0');
             $table->string('review_comment')->nullable();
             $table->integer('reviewed_by')->nullable();

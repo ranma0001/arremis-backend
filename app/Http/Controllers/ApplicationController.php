@@ -26,6 +26,9 @@ class ApplicationController extends Controller
     {
         $this->middleware('custom.jwt');
     }
+
+    //save and also save as draft
+    //application status = 1 save 2 = draft
     public function create_application(Request $request)
     {
 
@@ -133,6 +136,8 @@ class ApplicationController extends Controller
                     'description' => $productListingData['description'],
                     'country_manufacturer' => $productListingData['country_manufacturer'],
                     'classification' => $productListingData['classification'],
+                    'certificate_distributorship' => $productListingData['certificate_distributorship'],
+                    'certificate_country_manufacturer' => $productListingData['certificate_country_manufacturer'],
                 ]);
 
                 $createdProductListing[] = $product_listing;
@@ -247,6 +252,8 @@ class ApplicationController extends Controller
                         'description' => $productListingData['description'],
                         'country_manufacturer' => $productListingData['country_manufacturer'],
                         'classification' => $productListingData['classification'],
+                        // 'certificate_distributorship' => $productListingData['certificate_distributorship'],
+                        // 'certificate_country_manufacturer' => $productListingData['certificate_country_manufacturer'],
                     ]);
 
                     $createdProductListing[] = $product_listing;

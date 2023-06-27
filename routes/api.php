@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EquipmentController;
@@ -107,4 +108,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     ##Generate PDF
     Route::get('/generate-pdf', [PdfController::class, 'generatePDF']);
 
+    ##Admin PTO List of table
+    Route::get('list/submission', [AdminController::class, 'submissionList']);
+    Route::get('list/review', [AdminController::class, 'reviewList']);
 });
