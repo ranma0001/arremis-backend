@@ -143,4 +143,104 @@ class Controller extends BaseController
         );
     }
 
+    public function paginate_filter_sort_search_modified($query, $ALLOWED_FILTERS, $JSON_FIELDS = [], $BOOL_FIELDS = [], $SEARCH_FIELDS = [], $IDS_COLUMN = "", $USE_OR_WHERE = false)
+    {
+
+        $q = request('q', null);
+        if (request('q')) {
+            $filter_queries = [];
+            foreach ($SEARCH_FIELDS as $search_field) {
+                $search_field = implode('`.`', explode('.', $search_field));
+                array_push($filter_queries, "`$search_field` LIKE '%$q%' ");
+            }
+            if (sizeof($filter_queries) > 0) {
+                $all_query = '(' . implode(' or ', $filter_queries) . ')';
+                $query = $query->whereRaw($all_query);
+            }
+        }
+
+        $all_filter_queries = [];
+        $filters = [];
+
+        foreach ($ALLOWED_FILTERS as $allowed_filter) {
+            $filters[$allowed_filter] = request($allowed_filter);
+            if (request($allowed_filter, null)) {
+                $filter_queries = [];
+                foreach (request($allowed_filter) as $filter) {
+                    array_push($filter_queries, "`$allowed_filter` = '$filter' ");
+                }
+                if (sizeof($filter_queries) > 0) {
+                    $filter_query = '(' . implode(' or ', $filter_queries) . ')';
+                    array_push($all_filter_queries, $filter_query);
+                }
+            }
+        }
+        if (sizeof($all_filter_queries) > 0) {
+            $all_query = '(' . implode(' and ', $all_filter_queries) . ')';
+            if ($USE_OR_WHERE) {
+                $query = $query->orWhereRaw($all_query);
+                clock('use_or_where: ', $query->toSql());
+            } else {
+                $query = $query->whereRaw($all_query);
+            }
+        }
+
+        // pagination
+        $total = count(DB::select($query->toSql(), $query->getBindings())); //$query->count();
+        $page = (int) request('page', 1);
+        $take = (int) request('take', $total);
+        $skip = ($page - 1) * $take;
+        $query = $query->skip($skip)->take($take);
+
+        // sorting
+        $sort_key = request('sort_key');
+        $sort_dir = request('sort_dir') == 'descend' ? 'desc' : 'asc';
+
+        // if (is_array($sort_key)) {
+        //     foreach ($sort_key as $item) {
+        //         $query = $query->orderBy($item, $sort_dir);
+        //     }
+        // } else {
+
+        //     if ($sort_key == 'id') {
+        //         $query = $query;
+        //     } else {
+        //         $query = $query->orderBy($sort_key, $sort_dir);
+        //     }
+
+        // }
+        return $query->toSql();
+
+        $data = $query->get();
+
+        if (sizeof($JSON_FIELDS) > 0) {
+            $data->transform(function ($item, $key) use ($JSON_FIELDS) {
+                foreach ($JSON_FIELDS as $json_field) {
+                    $item->{$json_field} = json_decode($item->{$json_field});
+                }
+                return $item;
+            });
+        }
+
+        if (sizeof($BOOL_FIELDS) > 0) {
+            $data->transform(function ($item, $key) use ($BOOL_FIELDS) {
+                foreach ($BOOL_FIELDS as $bool_field) {
+                    $item->{$bool_field} = boolval($item->{$bool_field});
+                }
+                return $item;
+            });
+        }
+
+        return array(
+            'filters' => $filters,
+            'sort_dir' => $sort_dir === 'desc' ? 'descend' : 'ascend',
+            'sort_key' => $sort_key,
+            'page' => $page,
+            'take' => $take,
+            'total' => $total,
+            'q' => $q,
+            'data' => $data,
+        );
+    }
+
 }

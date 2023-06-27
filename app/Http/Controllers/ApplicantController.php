@@ -232,7 +232,7 @@ class ApplicantController extends Controller
     public function list_applicant(Request $request)
     {
         $query = Applicant::query()
-            ->select('applicant.*', 'applicant_company_information.*', 'users.*')
+            ->select('applicant_firstname', 'applicant_middlename', 'applicant_lastname', 'applicant_extensionname', 'designation', 'company_name', 'year_establish', 'tel_no', 'fax_no', 'company_email', 'business_organization_type', 'region', 'province', 'municipality', 'barangay', 'address_street', 'owner_name', 'map_id', 'latitude', 'longitude', 'marker_description', 'classification', 'users.*')
             ->join('applicant_company_information', 'applicant.id', '=', 'applicant_company_information.applicant_id')
             ->join('users', 'users.id', '=', 'applicant.user_id');
 
@@ -242,9 +242,9 @@ class ApplicantController extends Controller
         $BOOL_FIELDS = [];
         $response = $this->paginate_filter_sort_search($query, $ALLOWED_FILTERS, $JSON_FIELDS, $BOOL_FIELDS, $SEARCH_FIELDS);
 
-        foreach ($response as &$record) {
-            $record['classification'] = json_decode($record['classification'], true);
-        }
+        // foreach ($response as &$record) {
+        //     $record['classification'] = json_decode($record['classification'], true);
+        // }
 
         return response()->json($response);
     }
